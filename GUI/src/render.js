@@ -88,8 +88,8 @@ function DrawTraces(canvas, layer, scalefactor)
                 }
                 else if (segment.pathtype == "polygon")
                 {
-                    // Currently not supported. The polygons don't render correctly yet.
-                    //drawPolygons(ctx, scalefactor, segment.segments,color);
+                    //let lineWidth = Math.max(1 / scalefactor, segment.width);
+                    //render_trace.Polygon(ctx, segment.segments, lineWidth, colorMap.GetTraceColor(segment.layer-1));
                 }
                 else if( segment.pathtype == "via_round")
                 {

@@ -35,12 +35,12 @@ function Square(guiContext, centerPoint, diameter, drillDiameter, colorVia, colo
                          fill: true,
                          }
 
-    render_lowlevel.Polygon( guiContext,
-                             centerPoint, 
-                             polygonVerticies,
-                             angle,
-                             renderOptions
-                           );
+    render_lowlevel.RegularPolygon( guiContext,
+                                    centerPoint, 
+                                    polygonVerticies,
+                                    angle,
+                                    renderOptions
+                                  );
 
     // Draw drill hole
     renderOptions = {color: colorDrill,
@@ -64,12 +64,12 @@ function Octagon(guiContext, centerPoint, diameter, drillDiameter, colorVia, col
                           fill: true,
                         }
 
-    render_lowlevel.Polygon( guiContext,
-                             centerPoint, 
-                             polygonVerticies,
-                             angle,
-                             renderOptions
-                           );
+    render_lowlevel.RegularPolygon( guiContext,
+                                    centerPoint, 
+                                    polygonVerticies,
+                                    angle,
+                                    renderOptions
+                                  );
 
     // Draw drill hole
     renderOptions = {color: colorDrill,

@@ -41,6 +41,26 @@ function Line(guiContext, trace, lineWidth, color)
                        );
 }
 
+function Polygon(guiContext, segments, lineWidth, color)
+{
+    let startPoint = new Point(trace.x0, trace.y0);
+    let endPoint   = new Point(trace.x1, trace.y1);
+
+    let renderOptions = { color: color,
+                          fill: false,
+                          lineWidth: lineWidth,
+                          lineCap: "round" 
+                        }
+
+    render_lowlevel.Line( guiContext,
+                          startPoint,
+                          endPoint,
+                          renderOptions
+                       );
+}
+
+
+
 module.exports = {
   Arc, Line
 }

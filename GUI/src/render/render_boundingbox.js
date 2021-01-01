@@ -27,12 +27,12 @@ function Rectangle(guiContext, boundingBox, color)
                          globalAlpha: 0.2
                          }
 
-    render_lowlevel.Polygon( guiContext,
-                             centerPoint, 
-                             [point0, point1, point2, point3],
-                             0,
-                             renderOptions
-                           );
+    render_lowlevel.RegularPolygon( guiContext,
+                                    centerPoint, 
+                                    [point0, point1, point2, point3],
+                                    0,
+                                    renderOptions
+                                  );
 
     // Now stoke the box
     renderOptions = {color: color,
@@ -41,14 +41,14 @@ function Rectangle(guiContext, boundingBox, color)
                          lineWidth: 0.33
                          }
 
-    render_lowlevel.Polygon( guiContext,
-                             centerPoint, 
-                             [point0, point1, point2, point3],
-                             0,
-                             renderOptions
-                           );
+    render_lowlevel.RegularPolygon( guiContext,
+                                    centerPoint, 
+                                    [point0, point1, point2, point3],
+                                    0,
+                                    renderOptions
+                                  );
 
-}
+        }
 
 module.exports = {
   Rectangle

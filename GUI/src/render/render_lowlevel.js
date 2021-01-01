@@ -81,7 +81,7 @@ function Line(guiContext, startPoint, endPoint, renderOptions )
 
 }
 
-function Polygon(guiContext, centerPoint, vertices, angle, renderOptions )
+function RegularPolygon(guiContext, centerPoint, vertices, angle, renderOptions )
 {
 
     guiContext.save();
@@ -227,5 +227,5 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
 
 
 module.exports = {
-  Arc, Line, Polygon, Circle, Oval
+  Arc, Line, RegularPolygon, Circle, Oval
 }

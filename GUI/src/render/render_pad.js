@@ -43,12 +43,12 @@ function Rectangle(guiContext, pad, color)
                          fill: true,
                          }
 
-    render_lowlevel.Polygon( guiContext,
-                             centerPoint, 
-                             [point0, point1, point2, point3],
-                             pad.angle,
-                             renderOptions
-                           );
+    render_lowlevel.RegularPolygon( guiContext,
+                                    centerPoint, 
+                                    [point0, point1, point2, point3],
+                                    pad.angle,
+                                    renderOptions
+                                  );
 
 
     if(pad.pad_type == "tht")
@@ -154,12 +154,12 @@ function Octagon(guiContext, pad, color)
                           fill: true,
                         }
 
-    render_lowlevel.Polygon( guiContext,
-                             centerPoint, 
-                             polygonVerticies,
-                             angle,
-                             renderOptions
-                           );
+    render_lowlevel.RegularPolygon( guiContext,
+                                    centerPoint, 
+                                    polygonVerticies,
+                                    angle,
+                                    renderOptions
+                                  );
 
     /* Only draw drill hole if tht type pad */
     if(pad.pad_type == "tht")
