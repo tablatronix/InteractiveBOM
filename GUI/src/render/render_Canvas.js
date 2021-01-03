@@ -47,66 +47,53 @@ function rotateVector(v, angle)
   ];
 }
 
-function recalcLayerScale(canvasdict) {
-  var canvasdivid = {
-    "F": "frontcanvas",
-    "B": "backcanvas"
-  } [canvasdict.layer];
-  var width = document.getElementById(canvasdivid).clientWidth * 2;
-  var height = document.getElementById(canvasdivid).clientHeight * 2;
-  var bbox = applyRotation(pcbdata.board.pcb_shape.bounding_box);
-  var scalefactor = 0.98 * Math.min(
-    width / (bbox.maxx - bbox.minx),
-    height / (bbox.maxy - bbox.miny)
-  );
-  if (scalefactor < 0.1) {
-    scalefactor = 1;
-  }
-  canvasdict.transform.s = scalefactor;
-  var flip = (canvasdict.layer != "B");
-  if (flip) {
-    canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor + width) * 0.5;
-  } else {
-    canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor - width) * 0.5;
-  }
-  canvasdict.transform.y = -((bbox.maxy + bbox.miny) * scalefactor - height) * 0.5;
-  
-   for (var c in canvasdict.layers) 
-   {
-    console.log(height)
-    canvas = canvasdict.layers[c];
-    canvas.width = width;
-    canvas.height = height;
-    canvas.style.width = (width / 2) + "px";
-    canvas.style.height = (height / 2) + "px";
-  }
+function recalcLayerScale(canvasdict, canvas) 
+{
+    var canvasdivid = {
+      "F": "frontcanvas",
+      "B": "backcanvas"
+    } [canvasdict.layer];
 
+    var width = document.getElementById(canvasdivid).clientWidth * 2;
+    var height = document.getElementById(canvasdivid).clientHeight * 2;
+    var bbox = applyRotation(pcbdata.board.pcb_shape.bounding_box);
+    var scalefactor = 0.98 * Math.min(
+      width / (bbox.maxx - bbox.minx),
+      height / (bbox.maxy - bbox.miny)
+    );
+   
+    if (scalefactor < 0.1)
+    {
+      scalefactor = 1;
+    }
+    
+    canvasdict.transform.s = scalefactor;
+    var flip = (canvasdict.layer != "B");
+    if (flip)
+    {
+      canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor + width) * 0.5;
+    }
+    else
+    {
+      canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor - width) * 0.5;
+    }
+    canvasdict.transform.y = -((bbox.maxy + bbox.miny) * scalefactor - height) * 0.5;
 
     let pcbLayers = pcb.GetLayers();
     if(canvasdict.layer ==="F")
     {
-      for (var i = 0; i < pcbLayers.length; i++) 
-      {
-          canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, true);
-          canvas.width = width;
-          canvas.height = height;
-          canvas.style.width = (width / 2) + "px";
-          canvas.style.height = (height / 2) + "px";
-      }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = (width / 2) + "px";
+        canvas.style.height = (height / 2) + "px";
     }
     else
     {
-      for (var i = 0; i < pcbLayers.length; i++) 
-      {
-          canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, false);
-          canvas.width = width;
-          canvas.height = height;
-          canvas.style.width = (width / 2) + "px";
-          canvas.style.height = (height / 2) + "px";
-      }
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = (width / 2) + "px";
+        canvas.style.height = (height / 2) + "px";
     }
-    
-
 }
 
 function applyRotation(bbox) {
@@ -126,6 +113,12 @@ function applyRotation(bbox) {
 }
 
 
+function ClearHighlights(canvasdict)
+{
+  let canvas = pcb.GetLayerCanvas("highlights", (canvasdict.layer === "F"));
+  console.log(canvas);
+  ClearCanvas(canvas)
+}
 
 function ClearCanvas(canvas) {
   var ctx = canvas.getContext("2d");
@@ -135,67 +128,78 @@ function ClearCanvas(canvas) {
   ctx.restore();
 }
 
-function prepareLayer(canvasdict) {
+function prepareLayer(canvasdict, canvas)
+{
   var flip = (canvasdict.layer != "B");
 
   if(canvasdict.layer === "F")
   {
-    let pcbLayers = pcb.GetLayers();
-    for (var i = 0; i < pcbLayers.length; i++) 
-    {
-      canvas = document.getElementById(pcbLayers[i].front_id);
       prepareCanvas(canvas, flip, canvasdict.transform);
-    }
   }
   else
   {
-      let pcbLayers = pcb.GetLayers();
-      for (var i = 0; i < pcbLayers.length; i++) 
-      {
-        canvas = document.getElementById(pcbLayers[i].back_id);
-        prepareCanvas(canvas, flip, canvasdict.transform);
-      }
+      prepareCanvas(canvas, flip, canvasdict.transform);
   }
 }
 
 function RedrawCanvas(layerdict)
 {
-    prepareLayer(layerdict);
-
-
     let pcbLayers = pcb.GetLayers();
 
     if(layerdict.layer === "F")
     {
+      let canvas = undefined;
       for (var i = 0; i < pcbLayers.length; i++) 
       {
-        let canvas = document.getElementById(pcbLayers[i].front_id);
+        canvas = document.getElementById(pcbLayers[i].front_id);
+        prepareLayer(layerdict, canvas);
         ClearCanvas(canvas);
       }
     }
     else
     {
+        let canvas = undefined;
         for (var i = 0; i < pcbLayers.length; i++) 
         {
-          let canvas = document.getElementById(pcbLayers[i].back_id);
+          canvas = document.getElementById(pcbLayers[i].back_id);
+          prepareLayer(layerdict, canvas);
           ClearCanvas(canvas);
         }
     }
-
-  //ClearCanvas(layerdict.layers.bg);
-  //ClearCanvas(layerdict.layers.edgecuts);
-  
-  //drawHighlightsOnLayer(layerdict);
 }
 
-function ResizeCanvas(layerdict) {
-  recalcLayerScale(layerdict);
-  RedrawCanvas(layerdict);
+function ResizeCanvas(layerdict)
+{
+    let flip = (layerdict.layer != "B");
+    let pcbLayers = pcb.GetLayers();
+    
+    if(layerdict.layer === "F")
+    {
+        let canvas = undefined;
+        for (var i = 0; i < pcbLayers.length; i++) 
+        {
+          canvas = document.getElementById(pcbLayers[i].front_id);
+          recalcLayerScale(layerdict, canvas);
+          prepareCanvas(canvas, flip, layerdict.transform);
+          ClearCanvas(canvas);
+        }
+    }
+    else
+    {
+        let canvas = undefined;
+        for (var i = 0; i < pcbLayers.length; i++) 
+        {
+          canvas = document.getElementById(pcbLayers[i].back_id);
+          recalcLayerScale(layerdict, canvas);
+          prepareCanvas(canvas, flip, layerdict.transform);
+          ClearCanvas(canvas);
+        }
+    }
 }
 
 
 module.exports = {
-ResizeCanvas, RedrawCanvas, ClearCanvas, rotateVector
+ResizeCanvas, RedrawCanvas, rotateVector, ClearHighlights
 }
 
 
