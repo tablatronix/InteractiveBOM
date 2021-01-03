@@ -83,6 +83,7 @@ function createRowHighlightHandler(rowid, refs) {
       }
       document.getElementById(globalData.getCurrentHighlightedRowId()).classList.remove("highlighted");
     }
+    
     document.getElementById(rowid).classList.add("highlighted");
     globalData.setCurrentHighlightedRowId(rowid);
     globalData.setHighlightedRefs(refs);

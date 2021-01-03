@@ -171,9 +171,30 @@ function DrawModule(isViewFront, layer, scalefactor, part, highlight)
         if (part.location == layer)
         {
             let color_BoundingBox = colorMap.GetBoundingBoxColor(highlight, isPlaced);
-            var ctx = pcb.GetLayerCanvas(part.layer, isViewFront).getContext("2d")
+            var ctx = pcb.GetLayerCanvas("highlights", isViewFront).getContext("2d")
             render_boundingbox.Rectangle(ctx, part.package.bounding_box, color_BoundingBox);
         }
+        // draw pads
+        for (let pad of part.package.pads) 
+        {
+            /*
+                Check that part on layer should be drawn. Will draw when requested layer 
+                matches the parts layer.
+            
+              If the part is through hole it needs to be drawn on each layer
+              otherwise the part is an smd and should only be drawn on a the layer it belongs to.
+            */
+            if (    (pad.pad_type == "tht")
+                 || ((pad.pad_type == "smd") && (part.location == layer))
+               )
+            {
+                let highlightPin1 = ((pad.pin1 == "yes")  && globalData.getHighlightPin1());
+                let color_pad = colorMap.GetPadColor(highlightPin1, highlight, isPlaced);
+                var ctx = pcb.GetLayerCanvas("highlights", isViewFront).getContext("2d")
+                DrawPad(ctx, pad, color_pad);
+            }
+        }
+
     }
 
     // draw pads
@@ -190,9 +211,8 @@ function DrawModule(isViewFront, layer, scalefactor, part, highlight)
              || ((pad.pad_type == "smd") && (part.location == layer))
            )
         {
-
             let highlightPin1 = ((pad.pin1 == "yes")  && globalData.getHighlightPin1());
-            let color_pad = colorMap.GetPadColor(highlightPin1, highlight, isPlaced);
+            let color_pad = colorMap.GetPadColor(highlightPin1, false, isPlaced);
             var ctx = pcb.GetLayerCanvas("pads", isViewFront).getContext("2d")
             DrawPad(ctx, pad, color_pad);
         }
@@ -275,8 +295,10 @@ function initRender() {
 
 function drawHighlightsOnLayer(canvasdict) 
 {
-  render_canvas.ClearCanvas(canvasdict.layers.highlight);
-  DrawModules(canvasdict.layers.highlight, canvasdict.layer,canvasdict.transform.s, globalData.getHighlightedRefs());
+  let isViewFront = (canvasdict.layer === "F")
+  render_canvas.ClearHighlights(canvasdict);
+  DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, globalData.getHighlightedRefs());
+  //DrawModules(isViewFront, canvasdict.layer,canvasdict.transform.s, globalData.getHighlightedRefs());
 }
 
 function drawHighlights(passed) 
