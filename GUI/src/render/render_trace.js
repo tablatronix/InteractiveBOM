@@ -43,24 +43,25 @@ function Line(guiContext, trace, lineWidth, color)
 
 function Polygon(guiContext, segments, lineWidth, color)
 {
-    let startPoint = new Point(trace.x0, trace.y0);
-    let endPoint   = new Point(trace.x1, trace.y1);
-
+    vertices = [];
+    for (let i of segments)
+    {
+        let point1 = new Point(i.x0, i.y0);
+        vertices.push(point1);
+    }
     let renderOptions = { color: color,
-                          fill: false,
-                          lineWidth: lineWidth,
-                          lineCap: "round" 
-                        }
+        fill: true,
+    }
 
-    render_lowlevel.Line( guiContext,
-                          startPoint,
-                          endPoint,
-                          renderOptions
-                       );
+    render_lowlevel.IrregularPolygon( guiContext,
+                                        vertices,
+                                        renderOptions
+                                      );
+
 }
 
 
 
 module.exports = {
-  Arc, Line
+  Arc, Line, Polygon
 }

@@ -181,6 +181,7 @@ function GetMetadata(){
                                          PCB Layers Interfaces
 ***************************************************************************************************/
 var Layers = [];
+var layer_Zindex = 0;
 
 function GetLayers()
 {
@@ -193,6 +194,32 @@ function PCBLayer(name)
     this.name    = name;
     this.visible_front = true;
     this.visible_back = true;
+
+
+    this.front_id = "layer_front_" + name;
+    this.back_id  = "layer_rear_" + name;
+
+    canvas_front = document.getElementById("front-canvas-list")
+    layer_front = document.createElement("canvas");
+    layer_front.id = this.front_id;
+    layer_front.style.zIndex = layer_Zindex;
+    layer_front.style.position = "absolute";
+    layer_front.style.left = 0;
+    layer_front.style.top = 0;
+    canvas_front.appendChild(layer_front);
+
+
+    canvas_back = document.getElementById("back-canvas-list")
+    layer_back = document.createElement("canvas");
+    layer_back.id = this.back_id;
+    layer_back.style.zIndex = layer_Zindex;
+    layer_back.style.position = "absolute";
+    layer_back.style.left = 0;
+    layer_back.style.top = 0;
+
+    canvas_back.appendChild(layer_back);
+
+    layer_Zindex = layer_Zindex + 1;
 }
 
 function SetLayerVisibility(layerName, isFront, visible)
@@ -205,6 +232,20 @@ function SetLayerVisibility(layerName, isFront, visible)
         {
           // Layer exists. Check if visible
           Layers[layerIndex].visible_front = visible;
+
+          // TODO: Refactor this. below is used to interface between the different layer 
+          // setups that are currently being used but once switched to the new layer format
+          // then the above will not be needed. 
+          if(visible)
+          {
+              canvas= document.getElementById(Layers[layerIndex].front_id)
+              canvas.style.display=""
+          }
+          else
+          {
+              canvas= document.getElementById(Layers[layerIndex].front_id)
+              canvas.style.display="none"
+          }
         }
     }
     else
@@ -214,9 +255,48 @@ function SetLayerVisibility(layerName, isFront, visible)
         {
           // Layer exists. Check if visible
           Layers[layerIndex].visible_back = visible;
+
+          // TODO: Refactor this. below is used to interface between the different layer 
+          // setups that are currently being used but once switched to the new layer format
+          // then the above will not be needed. 
+          if(visible)
+          {
+               canvas= document.getElementById(Layers[layerIndex].back_id)
+               canvas.style.display=""
+          }
+          else
+          {
+            canvas= document.getElementById(Layers[layerIndex].back_id)
+            canvas.style.display="none"
+          }
+
         }
     }
     
+}
+
+function GetLayerCanvas(layerName, isFront)
+{
+    // Get the index of the PCB layer 
+    // MAp used here to create a list of just the layer names, which indexOf can then  be used against.
+    let index = Layers.map(function(e) { return e.name; }).indexOf(layerName);
+    // Requested layer does not exist. Create new layer
+    if(index === -1)
+    {
+      // Adds layer to layer stack
+        Layers.push(new PCBLayer(layerName));
+        index = Layers.length-1;
+    }
+
+    // Return the canvas instance
+    if(isFront)
+    {
+      return document.getElementById(Layers[index].front_id);
+    } 
+    else
+    {
+      return document.getElementById(Layers[index].back_id);
+    }
 }
 
 function CreateLayers(pcbdataStructure)
@@ -248,6 +328,10 @@ function CreateLayers(pcbdataStructure)
           Layers.push(new PCBLayer(layer.name));
         }
     }
+
+    // XXX: Need another way to extract all layers from input
+    Layers.push(new PCBLayer("edges"));
+    Layers.push(new PCBLayer("pads"));
 }
 
 
@@ -300,5 +384,5 @@ function OpenPcbData(pcbdata)
 
 module.exports = {
   OpenPcbData, GetBOM, getAttributeValue, GetBOMCombinedValues, filterBOMTable, GetMetadata, 
-  AddCheckbox, GetLayers, IsLayerVisible, SetLayerVisibility
+  AddCheckbox, GetLayers, IsLayerVisible, SetLayerVisibility, GetLayerCanvas
 }

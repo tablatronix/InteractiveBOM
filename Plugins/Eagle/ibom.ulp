@@ -586,27 +586,49 @@ void PrintTraces(void)
             S.polygons(P)
             {
 
-                PrintTabs();
-                printf("{\"layer\": \"%d\", \"pathtype\" : \"polygon\", \"segments\": [\n",P.layer);
-                tabcount++;
-                    // Using contour loop variable to get the eagle calculate boundaries for the polygon.
-                    P.contours(C)
+               
+                int x0;
+                int y0;
+                int first = 1;
+                int isPositive = 1;
+                // Using contour loop variable to get the eagle calculate boundaries for the polygon.
+                P.contours(C)
+                {
+                    if (first)
                     {
-                        if(C.arc)
-                        {
-                            // According to eagle documentation, output is always clockwise. 
-                            PrintSignalType_PolyArc(u2mm(C.arc.xc), u2mm(C.arc.yc),  u2mm(C.arc.radius), C.arc.angle1,  C.arc.angle2,  u2mm(C.width));
-                        }
-                        else
-                        {
-                            PrintSignalType_PolyLine(u2mm(C.x1), u2mm(C.y1), u2mm(C.x2), u2mm(C.y2), u2mm(C.width));
-                        }
+                        // a new partial polygon is starting
+                        x0 = C.x1;
+                        y0 = C.y1;
+                        PrintTabs();
+                        printf("{\"layer\": \"%d\", \"pathtype\" : \"polygon\", \"positive\": \"%d\", \"segments\": [\n",P.layer, isPositive);
+                        tabcount++;
                     }
-                    tabcount--;
-                    PrintTabs();
-                printf("]\n");
-                PrintTabs();
-                printf("},\n");
+
+                    if(C.arc)
+                    {
+                        // According to eagle documentation, output is always clockwise. 
+                        PrintSignalType_PolyArc(u2mm(C.arc.xc), u2mm(C.arc.yc),  u2mm(C.arc.radius), C.arc.angle1,  C.arc.angle2,  u2mm(C.width));
+                    }
+                    else
+                    {
+                        PrintSignalType_PolyLine(u2mm(C.x1), u2mm(C.y1), u2mm(C.x2), u2mm(C.y2), u2mm(C.width));
+                    }
+
+                    if (first)
+                    {
+                        first = 0;
+                    }
+                    else if (C.x2 == x0 && C.y2 == y0) 
+                    {
+                        tabcount--;
+                        PrintTabs();
+                        printf("]\n");
+                        PrintTabs();
+                        printf("},\n");
+                        first = 1;
+                        isPositive = 0;
+                    }
+                }
             }
             tabcount--;
             PrintTabs();

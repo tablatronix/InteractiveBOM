@@ -139,6 +139,51 @@ function RegularPolygon(guiContext, centerPoint, vertices, angle, renderOptions 
 
 }
 
+
+function IrregularPolygon(guiContext, vertices, renderOptions )
+{
+
+    guiContext.save();
+    if( renderOptions.color)
+    {
+        guiContext.fillStyle  =  renderOptions.color;
+        guiContext.strokeStyle =  renderOptions.color;        
+    }
+    // If overwriting line width, then update that here
+    if(renderOptions.lineWidth)
+    {
+        guiContext.lineWidth = renderOptions.lineWidth;
+    }
+
+    if(renderOptions.globalAlpha)
+    {
+        guiContext.globalAlpha = renderOptions.globalAlpha;
+    }
+
+    guiContext.beginPath();
+    guiContext.moveTo(vertices[0].x,vertices[0].y);
+
+    for(var i = 1; i < vertices.length; i++)
+    {
+        guiContext.lineTo(vertices[i].x,vertices[i].y);
+    }
+    guiContext.closePath();
+
+    // If fill is true, fill the box, otherwise just make an outline
+    if(renderOptions.fill)
+    {
+        guiContext.fill()
+    }
+    else
+    {
+        guiContext.stroke();
+    }
+
+    guiContext.restore();
+
+}
+
+
 function Circle(guiContext, centerPoint, radius, renderOptions)
 {
     guiContext.save();
@@ -189,7 +234,7 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
     if( renderOptions.color)
     {
         guiContext.fillStyle  =  renderOptions.color;
-        guiContext.strokeStyle =  renderOptions.color;        
+        guiContext.strokeStyle =  renderOptions.color;
     }
 
     /*
@@ -227,5 +272,5 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
 
 
 module.exports = {
-  Arc, Line, RegularPolygon, Circle, Oval
+  Arc, Line, RegularPolygon, IrregularPolygon, Circle, Oval
 }

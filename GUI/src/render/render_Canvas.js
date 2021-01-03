@@ -1,6 +1,6 @@
 var render_lowlevel     = require('./render_lowlevel.js')
 var Point               = require('./point.js').Point
-
+var pcb                 = require('../pcb.js')
 
 
 
@@ -22,19 +22,6 @@ function setBoardRotation(value)
   resizeAll();
 }
 
-
-function clearCanvas(canvas) 
-{
-  let ctx = canvas.getContext("2d");
-  ctx.save();
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.restore();
-}
-
-
-
-
 function prepareCanvas(canvas, flip, transform) 
 {
   let ctx = canvas.getContext("2d");
@@ -50,6 +37,7 @@ function prepareCanvas(canvas, flip, transform)
   ctx.rotate(boardRotation*Math.PI/180);
   ctx.scale(transform.s, transform.s);
 }
+
 function rotateVector(v, angle) 
 {
   angle = angle*Math.PI/180;
@@ -82,13 +70,33 @@ function recalcLayerScale(canvasdict) {
     canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor - width) * 0.5;
   }
   canvasdict.transform.y = -((bbox.maxy + bbox.miny) * scalefactor - height) * 0.5;
-  for (var c of ["bg", "highlight"]) {
-    canvas = canvasdict[c];
+  
+   for (var c in canvasdict.layers) 
+   {
+    canvas = canvasdict.layers[c];
     canvas.width = width;
     canvas.height = height;
     canvas.style.width = (width / 2) + "px";
     canvas.style.height = (height / 2) + "px";
   }
+
+
+    let pcbLayers = pcb.GetLayers();
+    for (var i = 0; i < pcbLayers.length; i++) 
+    {
+        canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, true);
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = (width / 2) + "px";
+        canvas.style.height = (height / 2) + "px";
+
+        canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, false);
+        canvas.width = width;
+        canvas.height = height;
+        canvas.style.width = (width / 2) + "px";
+        canvas.style.height = (height / 2) + "px";
+    }
+
 }
 
 function applyRotation(bbox) {
@@ -119,14 +127,54 @@ function ClearCanvas(canvas) {
 
 function prepareLayer(canvasdict) {
   var flip = (canvasdict.layer != "B");
-  for (var c of ["bg", "highlight"]) {
-    prepareCanvas(canvasdict[c], flip, canvasdict.transform);
+
+  if(canvasdict.layer === "F")
+  {
+    let pcbLayers = pcb.GetLayers();
+    for (var i = 0; i < pcbLayers.length; i++) 
+    {
+      canvas = document.getElementById(pcbLayers[i].front_id);
+      prepareCanvas(canvas, flip, canvasdict.transform);
+    }
+  }
+  else
+  {
+      let pcbLayers = pcb.GetLayers();
+      for (var i = 0; i < pcbLayers.length; i++) 
+      {
+        canvas = document.getElementById(pcbLayers[i].back_id);
+        prepareCanvas(canvas, flip, canvasdict.transform);
+      }
   }
 }
 
-function RedrawCanvas(layerdict) {
-  prepareLayer(layerdict);
-  ClearCanvas(layerdict.bg);
+function RedrawCanvas(layerdict)
+{
+    prepareLayer(layerdict);
+
+
+    let pcbLayers = pcb.GetLayers();
+
+    if(layerdict.layer === "F")
+    {
+      for (var i = 0; i < pcbLayers.length; i++) 
+      {
+        let canvas = document.getElementById(pcbLayers[i].front_id);
+        ClearCanvas(canvas);
+      }
+    }
+    else
+    {
+        for (var i = 0; i < pcbLayers.length; i++) 
+        {
+          let canvas = document.getElementById(pcbLayers[i].back_id);
+          ClearCanvas(canvas);
+        }
+    }
+
+  //ClearCanvas(layerdict.layers.bg);
+  //ClearCanvas(layerdict.layers.edgecuts);
+  
   //drawHighlightsOnLayer(layerdict);
 }
 

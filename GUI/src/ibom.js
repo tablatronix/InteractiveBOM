@@ -315,8 +315,7 @@ function createLayerCheckboxChangeHandler(layerEntry, isFront) {
     return function() 
     {
         if(isFront)
-        { 
-           
+        {
             if(layerEntry.visible_front)
             {
                 pcb.SetLayerVisibility(layerEntry.name, isFront, false);
@@ -341,8 +340,6 @@ function createLayerCheckboxChangeHandler(layerEntry, isFront) {
                 globalData.writeStorage("checkbox_layer_back_" + layerEntry.name + "_visible", "true");
             }
         }
-            render.drawCanvas(allcanvas.front);
-            render.drawCanvas(allcanvas.back);
     }
 }
 
@@ -860,7 +857,6 @@ function changeBomLayout(layout) {
       document.getElementById("layerdiv"   ).style.display = "";
       document.getElementById("bot"        ).style.height = "calc(100% - 80px)";
       
-      console.log("TB Split")
       document.getElementById("datadiv"   ).classList.add(   "split-horizontal");
       document.getElementById("bomdiv"     ).classList.remove(   "split-horizontal");
       document.getElementById("canvasdiv"  ).classList.remove(   "split-horizontal");
@@ -912,7 +908,6 @@ function changeBomLayout(layout) {
       document.getElementById("layerdiv"   ).style.display = "";
       document.getElementById("bot"        ).style.height = "calc(100% - 80px)";
 
-      console.log("TB Split")
       document.getElementById("datadiv"   ).classList.add(   "split-horizontal");
       document.getElementById("bomdiv"     ).classList.remove(   "split-horizontal");
       document.getElementById("canvasdiv"  ).classList.remove(   "split-horizontal");
@@ -1149,6 +1144,9 @@ window.onload = function(e) {
   
   // This function makes so that the user data for the pcb is converted to our internal structure
   pcb.OpenPcbData(pcbdata)
+
+
+  // Create canvas layers. One canvas per pcb layer
 
   globalData.initStorage();
   cleanGutters();

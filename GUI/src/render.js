@@ -40,9 +40,9 @@ function DrawPad(ctx, pad, color)
     }
 }
 
-function DrawPCBEdges(canvas, scalefactor) 
+function DrawPCBEdges(isViewFront, scalefactor) 
 {
-    let ctx = canvas.getContext("2d");
+    let ctx = pcb.GetLayerCanvas("edges", isViewFront).getContext("2d")
     let color = colorMap.GetPCBEdgeColor();
 
     for (let edge of pcbdata.board.pcb_shape.edges) 
@@ -64,112 +64,106 @@ function DrawPCBEdges(canvas, scalefactor)
     }
 }
 
-function DrawTraces(canvas, layer, scalefactor)
+function DrawTraces(isViewFront, scalefactor)
 {
-    let ctx = canvas.getContext("2d");
-    let isFront = (layer === "F");
     // Iterate over all traces in the design
     for (let trace of pcbdata.board.traces)
     {
         // iterate over all segments in a trace 
         for (let segment of trace.segments)
         {
-            if(pcb.IsLayerVisible(segment.layer, isFront))
+            var ctx = pcb.GetLayerCanvas(segment.layer, isViewFront).getContext("2d")
+
+            if(segment.pathtype == "line")
             {
-                if(segment.pathtype == "line")
-                {
-                    let lineWidth = Math.max(1 / scalefactor, segment.width);
-                    render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
-                }
-                else if(segment.pathtype == "arc")
-                {
-                    let lineWidth = Math.max(1 / scalefactor, segment.width);
-                    render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
-                }
-                else if (segment.pathtype == "polygon")
-                {
-                    //let lineWidth = Math.max(1 / scalefactor, segment.width);
-                    //render_trace.Polygon(ctx, segment.segments, lineWidth, colorMap.GetTraceColor(segment.layer-1));
-                }
-                else if( segment.pathtype == "via_round")
-                {
-                    let centerPoint = new Point(segment.x, segment.y);
-                    render_via.Round(   ctx
-                                      , centerPoint
-                                      , segment.diameter
-                                      , segment.drill
-                                      , colorMap.GetViaColor()
-                                      , colorMap.GetDrillColor()
-                                    );
-                }
-                else if( segment.pathtype == "via_octagon")
-                {
-                  let centerPoint = new Point(segment.x, segment.y);
-                  render_via.Octagon(   ctx
-                                      , centerPoint
-                                      , segment.diameter
-                                      , segment.drill
-                                      , colorMap.GetViaColor()
-                                      , colorMap.GetDrillColor()
-                                    );
-                }
-                else if( segment.pathtype == "via_square")
-                {
-                  let centerPoint = new Point(segment.x, segment.y);
-                  render_via.Square(   ctx
-                                     , centerPoint
-                                     , segment.diameter
-                                     , segment.drill
-                                     , colorMap.GetViaColor()
-                                     , colorMap.GetDrillColor()
-                                   );
-                }
-                else
-                {
-                    console.log("unsupported trace segment type");
-                }
+                let lineWidth = Math.max(1 / scalefactor, segment.width);
+                render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
+            }
+            else if(segment.pathtype == "arc")
+            {
+                let lineWidth = Math.max(1 / scalefactor, segment.width);
+                render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
+            }
+            else if (segment.pathtype == "polygon")
+            {
+                let lineWidth = Math.max(1 / scalefactor, segment.width);
+                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layer-1) : "#FFFFFFFF";
+                render_trace.Polygon(ctx, segment.segments, lineWidth, color);
+            }
+            else if( segment.pathtype == "via_round")
+            {
+                let centerPoint = new Point(segment.x, segment.y);
+                render_via.Round(   ctx
+                                  , centerPoint
+                                  , segment.diameter
+                                  , segment.drill
+                                  , colorMap.GetViaColor()
+                                  , colorMap.GetDrillColor()
+                                );
+            }
+            else if( segment.pathtype == "via_octagon")
+            {
+              let centerPoint = new Point(segment.x, segment.y);
+              render_via.Octagon(   ctx
+                                  , centerPoint
+                                  , segment.diameter
+                                  , segment.drill
+                                  , colorMap.GetViaColor()
+                                  , colorMap.GetDrillColor()
+                                );
+            }
+            else if( segment.pathtype == "via_square")
+            {
+              let centerPoint = new Point(segment.x, segment.y);
+              render_via.Square(   ctx
+                                 , centerPoint
+                                 , segment.diameter
+                                 , segment.drill
+                                 , colorMap.GetViaColor()
+                                 , colorMap.GetDrillColor()
+                               );
+            }
+            else
+            {
+                console.log("unsupported trace segment type");
             }
         }
     }
 }
 
-function DrawSilkscreen(canvas, frontOrBack, scalefactor)
+function DrawSilkscreen(isViewFront, scalefactor)
 {
-    let ctx = canvas.getContext("2d");
-    let isFront = (frontOrBack === "F");
     let color = "#aa4";
     
     for (let layer of pcbdata.board.layers)
     {
-        if(pcb.IsLayerVisible(layer.name, isFront))
+        var ctx = pcb.GetLayerCanvas(layer.name, isViewFront).getContext("2d")
+        for (let path of layer.paths)
         {
-            for (let path of layer.paths)
+            if(path.pathtype == "line")
             {
-                if(path.pathtype == "line")
-                {
-                    let lineWidth = Math.max(1 / scalefactor, path.width);
-                    render_silkscreen.Line(ctx, path, lineWidth, color);
-                }
-                else if(path.pathtype == "arc")
-                {
-                    let lineWidth = Math.max(1 / scalefactor, path.width);
-                    render_silkscreen.Arc(ctx, path, lineWidth, color);
-                }
-                else if(path.pathtype == "circle")
-                {
-                    let lineWidth = Math.max(1 / scalefactor, path.width);
-                    render_silkscreen.Circle(ctx, path, lineWidth, color);
-                }
-                else
-                {
-                    console.log("unsupported silkscreen path segment type", path.pathtype);
-                }
+                let lineWidth = Math.max(1 / scalefactor, path.width);
+                render_silkscreen.Line(ctx, path, lineWidth, color);
+            }
+            else if(path.pathtype == "arc")
+            {
+                let lineWidth = Math.max(1 / scalefactor, path.width);
+                render_silkscreen.Arc(ctx, path, lineWidth, color);
+            }
+            else if(path.pathtype == "circle")
+            {
+                let lineWidth = Math.max(1 / scalefactor, path.width);
+                render_silkscreen.Circle(ctx, path, lineWidth, color);
+            }
+            else
+            {
+                console.log("unsupported silkscreen path segment type", path.pathtype);
             }
         }
     }
 }
 
-function DrawModule(ctx, layer, scalefactor, part, highlight) 
+function DrawModule(isViewFront, layer, scalefactor, part, highlight) 
 {
     if (highlight || globalData.getDebugMode())
     {
@@ -177,6 +171,7 @@ function DrawModule(ctx, layer, scalefactor, part, highlight)
         if (part.location == layer)
         {
             let color_BoundingBox = colorMap.GetBoundingBoxColor(highlight, isPlaced);
+            var ctx = pcb.GetLayerCanvas(part.layer, isViewFront).getContext("2d")
             render_boundingbox.Rectangle(ctx, part.package.bounding_box, color_BoundingBox);
         }
     }
@@ -195,16 +190,17 @@ function DrawModule(ctx, layer, scalefactor, part, highlight)
              || ((pad.pad_type == "smd") && (part.location == layer))
            )
         {
+
             let highlightPin1 = ((pad.pin1 == "yes")  && globalData.getHighlightPin1());
             let color_pad = colorMap.GetPadColor(highlightPin1, highlight, isPlaced);
+            var ctx = pcb.GetLayerCanvas("pads", isViewFront).getContext("2d")
             DrawPad(ctx, pad, color_pad);
         }
     }
 }
 
-function DrawModules(canvas, layer, scalefactor, highlightedRefs)
+function DrawModules(isViewFront, layer, scalefactor, highlightedRefs)
 {
-    let ctx   = canvas.getContext("2d");
     let style = getComputedStyle(topmostdiv);
 
     for (let part of pcbdata.parts) 
@@ -212,7 +208,7 @@ function DrawModules(canvas, layer, scalefactor, highlightedRefs)
         let highlight = highlightedRefs.includes(part.name);
         if (highlightedRefs.length == 0 || highlight) 
         {
-            DrawModule(ctx, layer, scalefactor, part, highlight);
+            DrawModule(isViewFront, layer, scalefactor, part, highlight);
         }
     }
 }
@@ -220,11 +216,12 @@ function DrawModules(canvas, layer, scalefactor, highlightedRefs)
 function drawCanvas(canvasdict)
 {
     render_canvas.RedrawCanvas(canvasdict)
-    DrawPCBEdges  (canvasdict.bg, canvasdict.transform.s)
-    DrawModules   (canvasdict.bg, canvasdict.layer, canvasdict.transform.s, []);
-    DrawSilkscreen(canvasdict.bg, canvasdict.layer, canvasdict.transform.s);
-    DrawTraces    (canvasdict.bg, canvasdict.layer, canvasdict.transform.s)
-    drawHighlightsOnLayer(canvasdict);
+    let isViewFront = (canvasdict.layer === "F")
+    DrawPCBEdges  (isViewFront, canvasdict.transform.s)
+    DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
+    DrawSilkscreen(isViewFront, canvasdict.transform.s);
+    DrawTraces    (isViewFront, canvasdict.transform.s)
+    //drawHighlightsOnLayer(canvasdict);
 }
 
 function RotateVector(v, angle)
@@ -248,8 +245,11 @@ function initRender() {
         mousestarty: 0,
         mousedown: false,
       },
-      bg: document.getElementById("F_bg"),
-      highlight: document.getElementById("F_hl"),
+      layers: {
+        bg: document.getElementById("F_bg"),
+        highlight: document.getElementById("F_hl"),
+      },
+      
       layer: "F",
     },
     back: {
@@ -264,8 +264,10 @@ function initRender() {
         mousestarty: 0,
         mousedown: false,
       },
-      bg: document.getElementById("B_bg"),
-      highlight: document.getElementById("B_hl"),
+      layers: {
+          bg: document.getElementById("B_bg"),
+          highlight: document.getElementById("B_hl"),
+      },
       layer: "B",
     }
   };
@@ -273,8 +275,8 @@ function initRender() {
 
 function drawHighlightsOnLayer(canvasdict) 
 {
-  render_canvas.ClearCanvas(canvasdict.highlight);
-  DrawModules(canvasdict.highlight, canvasdict.layer,canvasdict.transform.s, globalData.getHighlightedRefs());
+  render_canvas.ClearCanvas(canvasdict.layers.highlight);
+  DrawModules(canvasdict.layers.highlight, canvasdict.layer,canvasdict.transform.s, globalData.getHighlightedRefs());
 }
 
 function drawHighlights(passed) 
