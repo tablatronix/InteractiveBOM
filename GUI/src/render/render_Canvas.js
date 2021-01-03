@@ -73,6 +73,7 @@ function recalcLayerScale(canvasdict) {
   
    for (var c in canvasdict.layers) 
    {
+    console.log(height)
     canvas = canvasdict.layers[c];
     canvas.width = width;
     canvas.height = height;
@@ -82,20 +83,29 @@ function recalcLayerScale(canvasdict) {
 
 
     let pcbLayers = pcb.GetLayers();
-    for (var i = 0; i < pcbLayers.length; i++) 
+    if(canvasdict.layer ==="F")
     {
-        canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, true);
-        canvas.width = width;
-        canvas.height = height;
-        canvas.style.width = (width / 2) + "px";
-        canvas.style.height = (height / 2) + "px";
-
-        canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, false);
-        canvas.width = width;
-        canvas.height = height;
-        canvas.style.width = (width / 2) + "px";
-        canvas.style.height = (height / 2) + "px";
+      for (var i = 0; i < pcbLayers.length; i++) 
+      {
+          canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, true);
+          canvas.width = width;
+          canvas.height = height;
+          canvas.style.width = (width / 2) + "px";
+          canvas.style.height = (height / 2) + "px";
+      }
     }
+    else
+    {
+      for (var i = 0; i < pcbLayers.length; i++) 
+      {
+          canvas =  pcb.GetLayerCanvas(pcbLayers[i].name, false);
+          canvas.width = width;
+          canvas.height = height;
+          canvas.style.width = (width / 2) + "px";
+          canvas.style.height = (height / 2) + "px";
+      }
+    }
+    
 
 }
 
