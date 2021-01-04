@@ -87,8 +87,10 @@ function DrawTraces(isViewFront, scalefactor)
             else if (segment.pathtype == "polygon")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
-                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layer-1) : "#FFFFFFFF";
-                render_trace.Polygon(ctx, segment.segments, lineWidth, color);
+                // Need to specify a color at full transparency so that a negative polygon 
+                // can be subtracted from a positive polygon.
+                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layer-1) : "#000000FF";
+                render_trace.Polygon(ctx, segment.segments, lineWidth, color, segment.positive === "1");
             }
             else if( segment.pathtype == "via_round")
             {
@@ -241,7 +243,6 @@ function drawCanvas(canvasdict)
     DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
     DrawSilkscreen(isViewFront, canvasdict.transform.s);
     DrawTraces    (isViewFront, canvasdict.transform.s)
-    //drawHighlightsOnLayer(canvasdict);
 }
 
 function RotateVector(v, angle)
@@ -265,11 +266,6 @@ function initRender() {
         mousestarty: 0,
         mousedown: false,
       },
-      layers: {
-        bg: document.getElementById("F_bg"),
-        highlight: document.getElementById("F_hl"),
-      },
-      
       layer: "F",
     },
     back: {
@@ -284,10 +280,6 @@ function initRender() {
         mousestarty: 0,
         mousedown: false,
       },
-      layers: {
-          bg: document.getElementById("B_bg"),
-          highlight: document.getElementById("B_hl"),
-      },
       layer: "B",
     }
   };
@@ -298,7 +290,6 @@ function drawHighlightsOnLayer(canvasdict)
   let isViewFront = (canvasdict.layer === "F")
   render_canvas.ClearHighlights(canvasdict);
   DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, globalData.getHighlightedRefs());
-  //DrawModules(isViewFront, canvasdict.layer,canvasdict.transform.s, globalData.getHighlightedRefs());
 }
 
 function drawHighlights(passed) 

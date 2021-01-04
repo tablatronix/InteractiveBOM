@@ -160,6 +160,11 @@ function IrregularPolygon(guiContext, vertices, renderOptions )
         guiContext.globalAlpha = renderOptions.globalAlpha;
     }
 
+    if(renderOptions.compositionType)
+    {
+        guiContext.globalCompositeOperation  = renderOptions.compositionType
+    }
+
     guiContext.beginPath();
     guiContext.moveTo(vertices[0].x,vertices[0].y);
 

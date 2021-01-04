@@ -41,7 +41,7 @@ function Line(guiContext, trace, lineWidth, color)
                        );
 }
 
-function Polygon(guiContext, segments, lineWidth, color)
+function Polygon(guiContext, segments, lineWidth, color, isPositive)
 {
     vertices = [];
     for (let i of segments)
@@ -49,8 +49,11 @@ function Polygon(guiContext, segments, lineWidth, color)
         let point1 = new Point(i.x0, i.y0);
         vertices.push(point1);
     }
+    let compositionType = (isPositive) ? "source-over" : "destination-out";
+
     let renderOptions = { color: color,
         fill: true,
+        compositionType: compositionType
     }
 
     render_lowlevel.IrregularPolygon( guiContext,

@@ -116,7 +116,6 @@ function applyRotation(bbox) {
 function ClearHighlights(canvasdict)
 {
   let canvas = pcb.GetLayerCanvas("highlights", (canvasdict.layer === "F"));
-  console.log(canvas);
   ClearCanvas(canvas)
 }
 
