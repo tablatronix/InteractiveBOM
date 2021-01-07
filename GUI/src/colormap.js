@@ -1,24 +1,24 @@
-var globalData        = require('./global.js')
+var globalData        = require("./global.js");
 
 var traceColorMap = 
 [ 
-  // Light Mode, Dark Mode
-  ["#C83232B4" , "#C83232B4"],
-  ["#CC6600C8" , "#CC6600C8"],
-  ["#CC9900C8" , "#CC9900C8"],
-  ["#336600C8" , "#336600C8"],
-  ["#666633C8" , "#666633C8"],
-  ["#FFCC33C8" , "#FFCC33C8"],
-  ["#669900C8" , "#669900C8"],
-  ["#999966C8" , "#999966C8"],
-  ["#99CC99C8" , "#99CC99C8"],
-  ["#669999C8" , "#669999C8"],
-  ["#33CC99C8" , "#33CC99C8"],
-  ["#669966C8" , "#669966C8"],
-  ["#336666C8" , "#336666C8"],
-  ["#009966C8" , "#009966C8"],
-  ["#006699C8" , "#006699C8"],
-  ["#3232C8B4" , "#3232C8B4"],
+    // Light Mode, Dark Mode
+    ["#C83232B4" , "#C83232B4"],
+    ["#CC6600C8" , "#CC6600C8"],
+    ["#CC9900C8" , "#CC9900C8"],
+    ["#336600C8" , "#336600C8"],
+    ["#666633C8" , "#666633C8"],
+    ["#FFCC33C8" , "#FFCC33C8"],
+    ["#669900C8" , "#669900C8"],
+    ["#999966C8" , "#999966C8"],
+    ["#99CC99C8" , "#99CC99C8"],
+    ["#669999C8" , "#669999C8"],
+    ["#33CC99C8" , "#33CC99C8"],
+    ["#669966C8" , "#669966C8"],
+    ["#336666C8" , "#336666C8"],
+    ["#009966C8" , "#009966C8"],
+    ["#006699C8" , "#006699C8"],
+    ["#3232C8B4" , "#3232C8B4"],
 ];
 //                         Light Mode, Dark Mode
 var padColor_Default     = ["#878787", "#878787"]   ;
@@ -60,7 +60,7 @@ function GetTraceColor(traceLayer)
 
 function GetBoundingBoxColor(isHighlited, isPlaced)
 {
-    let result = boundingBoxColor_Default
+    let result = boundingBoxColor_Default;
 
     // Order of color selection.
     if (isPlaced) 
@@ -78,7 +78,7 @@ function GetBoundingBoxColor(isHighlited, isPlaced)
     */
     else if(globalData.getDebugMode())
     {
-       result     = boundingBoxColor_Debug[GetColorPalette()];
+        result = boundingBoxColor_Debug[GetColorPalette()];
     }
     else
     {
@@ -90,7 +90,7 @@ function GetBoundingBoxColor(isHighlited, isPlaced)
 
 function GetPadColor(isPin1, isHighlited, isPlaced)
 {
-    let result = padColor_Default
+    let result = padColor_Default;
 
     if(isPin1)
     {
@@ -129,4 +129,4 @@ function GetDrillColor()
 module.exports = {
     GetTraceColor, GetBoundingBoxColor, GetPadColor, GetPCBEdgeColor,
     GetViaColor, GetDrillColor
-}
+};

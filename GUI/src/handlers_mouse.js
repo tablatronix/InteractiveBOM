@@ -1,5 +1,5 @@
-var globalData        = require('./global.js')
-var render     = require('./render.js')
+var globalData = require("./global.js");
+var render     = require("./render.js");
 
 function handleMouseDown(e, layerdict) 
 {
@@ -42,25 +42,25 @@ function modulesClicked(references)
         }
     }
 }
-function bboxScan(layer, x, y, transform) 
+function bboxScan(layer, x, y) 
 {
-        let result = [];
-        for (let part of pcbdata.parts) 
+    let result = [];
+    for (let part of pcbdata.parts) 
+    {
+        if( part.location == layer)
         {
-                if( part.location == layer)
-                {
-                        let b = part.package.bounding_box;
-                        if (    (x > b.x0 )
-                                 && (x < b.x1 )
-                                 && (y > b.y0 )
-                                 && (y < b.y1 )
-                                )
-                        {
-                                result.push(part.name);
-                        }
-                }
+            let b = part.package.bounding_box;
+            if (    (x > b.x0 )
+                        && (x < b.x1 )
+                        && (y > b.y0 )
+                        && (y < b.y1 )
+            )
+            {
+                result.push(part.name);
+            }
         }
-        return result;
+    }
+    return result;
 }
 
 
@@ -78,7 +78,7 @@ function handleMouseClick(e, layerdict)
         x = (2 * x / t.zoom - t.panx - t.x) / t.s;
     }
     y = (2 * y / t.zoom - t.y - t.pany) / t.s;
-    let v = render.RotateVector([x, y], -boardRotation);
+    let v = render.RotateVector([x, y], -globalData.GetBoardRotation());
     let reflist = bboxScan(layerdict.layer, v[0], v[1], t);
     if (reflist.length > 0) 
     {
@@ -95,7 +95,7 @@ function handleMouseUp(e, layerdict)
          && layerdict.transform.mousedown
          && layerdict.transform.mousedownx == e.offsetX
          && layerdict.transform.mousedowny == e.offsetY
-        ) 
+    ) 
     {
         // This is just a click
         handleMouseClick(e, layerdict);
@@ -177,28 +177,32 @@ function addMouseHandlers(div, layerdict)
     div.onmouseclick = function(e)
     {
         handleMouseClick(e, layerdict);
-    }
+    };
 
     div.onmousedown = function(e) 
     {
         handleMouseDown(e, layerdict);
     };
+    
     div.onmousemove = function(e) 
     {
         handleMouseMove(e, layerdict);
     };
+    
     div.onmouseup = function(e) 
     {
         handleMouseUp(e, layerdict);
     };
+    
     div.onmouseout = function(e) 
     {
         handleMouseUp(e, layerdict);
-    }
+    };
+
     div.onwheel = function(e) 
     {
         handleMouseWheel(e, layerdict);
-    }
+    };
     
     
     for (var element of [div]) 
@@ -212,4 +216,4 @@ function addMouseHandlers(div, layerdict)
 
 module.exports = {
     addMouseHandlers
-}
+};

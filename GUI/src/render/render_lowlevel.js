@@ -1,6 +1,6 @@
-var Point               = require('./point.js').Point
+"use strict";
 
-
+var Point = require("./point.js").Point;
 
 function Arc(guiContext, centerPoint, radius, angleStart, angleEnd, renderOptions )
 {
@@ -31,7 +31,7 @@ function Arc(guiContext, centerPoint, radius, angleStart, angleEnd, renderOption
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -70,7 +70,7 @@ function Line(guiContext, startPoint, endPoint, renderOptions )
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -128,7 +128,7 @@ function RegularPolygon(guiContext, centerPoint, vertices, angle, renderOptions 
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -162,7 +162,7 @@ function IrregularPolygon(guiContext, vertices, renderOptions )
 
     if(renderOptions.compositionType)
     {
-        guiContext.globalCompositeOperation  = renderOptions.compositionType
+        guiContext.globalCompositeOperation  = renderOptions.compositionType;
     }
 
     guiContext.beginPath();
@@ -177,7 +177,7 @@ function IrregularPolygon(guiContext, vertices, renderOptions )
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -210,7 +210,7 @@ function Circle(guiContext, centerPoint, radius, renderOptions)
 
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -231,8 +231,8 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
 {
 
     // Center point of both circles.
-    let centerPoint1 = new Point(0, -height/2)
-    let centerPoint2 = new Point(0, height/2)
+    let centerPoint1 = new Point(0, -height/2);
+    let centerPoint2 = new Point(0, height/2);
     let radius = width/2;
 
     guiContext.save();
@@ -264,7 +264,7 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
     
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -277,5 +277,5 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
 
 
 module.exports = {
-  Arc, Line, RegularPolygon, IrregularPolygon, Circle, Oval
-}
+    Arc, Line, RegularPolygon, IrregularPolygon, Circle, Oval
+};

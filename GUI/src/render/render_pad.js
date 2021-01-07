@@ -1,5 +1,6 @@
-var render_lowlevel     = require('./render_lowlevel.js')
-var Point               = require('./point.js').Point
+"use strict";
+var render_lowlevel     = require("./render_lowlevel.js");
+var Point               = require("./point.js").Point;
 
 function DrawDrillHole(guiContext, x, y, radius)
 {
@@ -7,20 +8,21 @@ function DrawDrillHole(guiContext, x, y, radius)
     let centerPoint = new Point(x, y);
 
 
-    let renderOptions = {color: "#CCCCCC",
-                         fill: true,
-                         }
+    let renderOptions = {
+        color: "#CCCCCC",
+        fill: true,
+    };
 
-    render_lowlevel.Circle( guiContext,
-                            centerPoint,                         
-                            radius, 
-                            renderOptions
-                          );                     
+    render_lowlevel.Circle(
+        guiContext,
+        centerPoint,                         
+        radius, 
+        renderOptions
+    );                     
 }
 
 function Rectangle(guiContext, pad, color)
 {
-
     let centerPoint = new Point(pad.x, pad.y);
 
     /*
@@ -39,17 +41,18 @@ function Rectangle(guiContext, pad, color)
     let point3 = new Point(-pad.dx/2, -pad.dy/2);
 
 
-    let renderOptions = {color: color,
-                         fill: true,
-                         }
+    let renderOptions = {
+        color: color,
+        fill: true,
+    };
 
-    render_lowlevel.RegularPolygon( guiContext,
-                                    centerPoint, 
-                                    [point0, point1, point2, point3],
-                                    pad.angle,
-                                    renderOptions
-                                  );
-
+    render_lowlevel.RegularPolygon( 
+        guiContext,
+        centerPoint, 
+        [point0, point1, point2, point3],
+        pad.angle,
+        renderOptions
+    );
 
     if(pad.pad_type == "tht")
     {
@@ -72,9 +75,7 @@ function Rectangle(guiContext, pad, color)
     values used to translate the central point to one of the verticies. 
 */
 function Oblong(guiContext, pad, color)
-{
-
-    
+{    
     // Diameter is the disnce from center of pad to tip of circle
     // elongation is a factor that related the diameter to the width
     // This is the total width
@@ -85,56 +86,55 @@ function Oblong(guiContext, pad, color)
     let height  = (pad.diameter-width/2)*2;
 
     // assumes oval is centered at (0,0)
-    let centerPoint = new Point(pad.x, pad.y)
+    let centerPoint = new Point(pad.x, pad.y);
 
-    let renderOptions = { color: color,
-                          fill: true,
-                        }
+    let renderOptions = { 
+        color: color,
+        fill: true,
+    };
 
-    render_lowlevel.Oval( guiContext,
-                          centerPoint,
-                          height,
-                          width,
-                          pad.angle,
-                          renderOptions
-                        )
+    render_lowlevel.Oval( 
+        guiContext,
+        centerPoint,
+        height,
+        width,
+        pad.angle,
+        renderOptions
+    );
 
     /* Only draw drill hole if tht type pad */
     if(pad.pad_type == "tht")
     {
-        DrawDrillHole(guiContext, pad.x, pad.y, pad.drill/2)
+        DrawDrillHole(guiContext, pad.x, pad.y, pad.drill/2);
     }
 }
 
 function Round(guiContext, pad, color)
 {
-
-
-
     let centerPoint = new Point(pad.x, pad.y);
 
+    let renderOptions = {
+        color: color,
+        fill: true,
+    };
 
-    let renderOptions = {color: color,
-                         fill: true,
-                         }
-
-    render_lowlevel.Circle( guiContext,
-                            centerPoint,                         
-                            pad.drill, 
-                            renderOptions
-                          ); 
-
+    render_lowlevel.Circle( 
+        guiContext,
+        centerPoint,                         
+        pad.drill, 
+        renderOptions
+    ); 
 
     if(pad.pad_type == "tht")
     {
-        DrawDrillHole(guiContext, pad.x, pad.y, pad.drill/2)
+        DrawDrillHole(guiContext, pad.x, pad.y, pad.drill/2);
     }
 }
 
 function Octagon(guiContext, pad, color)
 {
     // Will store the verticies of the polygon.
-    polygonVerticies = [];
+    let polygonVerticies = [];
 
     
     let n = 8;
@@ -146,20 +146,20 @@ function Octagon(guiContext, pad, color)
     }
 
     let angle = (pad.angle+45/2);
+    let centerPoint = new Point(pad.x, pad.y);
 
+    let renderOptions = { 
+        color: color,
+        fill: true,
+    };
 
-    let centerPoint = new Point(pad.x, pad.y)
-
-    let renderOptions = { color: color,
-                          fill: true,
-                        }
-
-    render_lowlevel.RegularPolygon( guiContext,
-                                    centerPoint, 
-                                    polygonVerticies,
-                                    angle,
-                                    renderOptions
-                                  );
+    render_lowlevel.RegularPolygon( 
+        guiContext,
+        centerPoint, 
+        polygonVerticies,
+        angle,
+        renderOptions
+    );
 
     /* Only draw drill hole if tht type pad */
     if(pad.pad_type == "tht")
@@ -169,5 +169,5 @@ function Octagon(guiContext, pad, color)
 }
 
 module.exports = {
-  Rectangle, Oblong, Round, Octagon
-}
+    Rectangle, Oblong, Round, Octagon
+};

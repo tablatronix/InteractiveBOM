@@ -1,20 +1,24 @@
 /* PCB rendering code */
 
-var globalData        = require('./global.js')
-var render_pads       = require('./render/render_pad.js')
-var render_via        = require('./render/render_via.js')
-var render_trace      = require('./render/render_trace.js')
-var render_boardedge  = require('./render/render_boardedge.js')
-var render_silkscreen = require('./render/render_silkscreen.js')
-var render_canvas     = require('./render/render_canvas.js')
-var render_boundingbox = require('./render/render_boundingbox.js')
-var Point             = require('./render/point.js').Point
-var pcb               = require('./pcb.js')
-var colorMap          = require('./colormap.js')
+"use strict";
+
+var globalData         = require("./global.js");
+var render_pads        = require("./render/render_pad.js");
+var render_via         = require("./render/render_via.js");
+var render_trace       = require("./render/render_trace.js");
+var render_boardedge   = require("./render/render_boardedge.js");
+var render_silkscreen  = require("./render/render_silkscreen.js");
+var render_canvas      = require("./render/render_canvas.js");
+var render_boundingbox = require("./render/render_boundingbox.js");
+var Point              = require("./render/point.js").Point;
+var pcb                = require("./pcb.js");
+var colorMap           = require("./colormap.js");
 
 
 //REMOVE: Using to test alternate placed coloring
-var isPlaced = false;
+let isPlaced = false;
+
+
 
 function DrawPad(ctx, pad, color) 
 {
@@ -28,21 +32,21 @@ function DrawPad(ctx, pad, color)
     } 
     else if (pad.shape == "round") 
     {
-         render_pads.Round(ctx, pad, color);
+        render_pads.Round(ctx, pad, color);
     } 
     else if (pad.shape == "octagon") 
     {
-      render_pads.Octagon(ctx, pad, color);
+        render_pads.Octagon(ctx, pad, color);
     } 
     else
     {
-        console.log("ERROR: Unsupported pad type ", pad.shape)
+        console.log("ERROR: Unsupported pad type ", pad.shape);
     }
 }
 
 function DrawPCBEdges(isViewFront, scalefactor) 
 {
-    let ctx = pcb.GetLayerCanvas("edges", isViewFront).getContext("2d")
+    let ctx = pcb.GetLayerCanvas("edges", isViewFront).getContext("2d");
     let color = colorMap.GetPCBEdgeColor();
 
     for (let edge of pcbdata.board.pcb_shape.edges) 
@@ -72,7 +76,7 @@ function DrawTraces(isViewFront, scalefactor)
         // iterate over all segments in a trace 
         for (let segment of trace.segments)
         {
-            var ctx = pcb.GetLayerCanvas(segment.layer, isViewFront).getContext("2d")
+            let ctx = pcb.GetLayerCanvas(segment.layer, isViewFront).getContext("2d")
 
             if(segment.pathtype == "line")
             {
@@ -95,35 +99,38 @@ function DrawTraces(isViewFront, scalefactor)
             else if( segment.pathtype == "via_round")
             {
                 let centerPoint = new Point(segment.x, segment.y);
-                render_via.Round(   ctx
-                                  , centerPoint
-                                  , segment.diameter
-                                  , segment.drill
-                                  , colorMap.GetViaColor()
-                                  , colorMap.GetDrillColor()
-                                );
+                render_via.Round(
+                    ctx
+                    , centerPoint
+                    , segment.diameter
+                    , segment.drill
+                    , colorMap.GetViaColor()
+                    , colorMap.GetDrillColor()
+                );
             }
             else if( segment.pathtype == "via_octagon")
             {
-              let centerPoint = new Point(segment.x, segment.y);
-              render_via.Octagon(   ctx
-                                  , centerPoint
-                                  , segment.diameter
-                                  , segment.drill
-                                  , colorMap.GetViaColor()
-                                  , colorMap.GetDrillColor()
-                                );
+                let centerPoint = new Point(segment.x, segment.y);
+                render_via.Octagon(
+                    ctx
+                    , centerPoint
+                    , segment.diameter
+                    , segment.drill
+                    , colorMap.GetViaColor()
+                    , colorMap.GetDrillColor()
+                );
             }
             else if( segment.pathtype == "via_square")
             {
-              let centerPoint = new Point(segment.x, segment.y);
-              render_via.Square(   ctx
-                                 , centerPoint
-                                 , segment.diameter
-                                 , segment.drill
-                                 , colorMap.GetViaColor()
-                                 , colorMap.GetDrillColor()
-                               );
+                let centerPoint = new Point(segment.x, segment.y);
+                render_via.Square(
+                    ctx
+                    , centerPoint
+                    , segment.diameter
+                    , segment.drill
+                    , colorMap.GetViaColor()
+                    , colorMap.GetDrillColor()
+                );
             }
             else
             {
@@ -136,10 +143,10 @@ function DrawTraces(isViewFront, scalefactor)
 function DrawSilkscreen(isViewFront, scalefactor)
 {
     let color = "#aa4";
-    
+
     for (let layer of pcbdata.board.layers)
     {
-        var ctx = pcb.GetLayerCanvas(layer.name, isViewFront).getContext("2d")
+        let ctx = pcb.GetLayerCanvas(layer.name, isViewFront).getContext("2d");
         for (let path of layer.paths)
         {
             if(path.pathtype == "line")
@@ -169,11 +176,11 @@ function DrawModule(isViewFront, layer, scalefactor, part, highlight)
 {
     if (highlight || globalData.getDebugMode())
     {
+        let ctx = pcb.GetLayerCanvas("highlights", isViewFront).getContext("2d");
         // draw bounding box
         if (part.location == layer)
         {
             let color_BoundingBox = colorMap.GetBoundingBoxColor(highlight, isPlaced);
-            var ctx = pcb.GetLayerCanvas("highlights", isViewFront).getContext("2d")
             render_boundingbox.Rectangle(ctx, part.package.bounding_box, color_BoundingBox);
         }
         // draw pads
@@ -188,15 +195,13 @@ function DrawModule(isViewFront, layer, scalefactor, part, highlight)
             */
             if (    (pad.pad_type == "tht")
                  || ((pad.pad_type == "smd") && (part.location == layer))
-               )
+            )
             {
                 let highlightPin1 = ((pad.pin1 == "yes")  && globalData.getHighlightPin1());
                 let color_pad = colorMap.GetPadColor(highlightPin1, highlight, isPlaced);
-                var ctx = pcb.GetLayerCanvas("highlights", isViewFront).getContext("2d")
                 DrawPad(ctx, pad, color_pad);
             }
         }
-
     }
 
     // draw pads
@@ -211,11 +216,11 @@ function DrawModule(isViewFront, layer, scalefactor, part, highlight)
         */
         if (    (pad.pad_type == "tht")
              || ((pad.pad_type == "smd") && (part.location == layer))
-           )
+        )
         {
             let highlightPin1 = ((pad.pin1 == "yes")  && globalData.getHighlightPin1());
             let color_pad = colorMap.GetPadColor(highlightPin1, false, isPlaced);
-            var ctx = pcb.GetLayerCanvas("pads", isViewFront).getContext("2d")
+            let ctx = pcb.GetLayerCanvas("pads", isViewFront).getContext("2d");
             DrawPad(ctx, pad, color_pad);
         }
     }
@@ -223,8 +228,6 @@ function DrawModule(isViewFront, layer, scalefactor, part, highlight)
 
 function DrawModules(isViewFront, layer, scalefactor, highlightedRefs)
 {
-    let style = getComputedStyle(topmostdiv);
-
     for (let part of pcbdata.parts) 
     {
         let highlight = highlightedRefs.includes(part.name);
@@ -237,12 +240,12 @@ function DrawModules(isViewFront, layer, scalefactor, highlightedRefs)
 
 function drawCanvas(canvasdict)
 {
-    render_canvas.RedrawCanvas(canvasdict)
-    let isViewFront = (canvasdict.layer === "F")
-    DrawPCBEdges  (isViewFront, canvasdict.transform.s)
+    render_canvas.RedrawCanvas(canvasdict);
+    let isViewFront = (canvasdict.layer === "F");
+    DrawPCBEdges  (isViewFront, canvasdict.transform.s);
     DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
     DrawSilkscreen(isViewFront, canvasdict.transform.s);
-    DrawTraces    (isViewFront, canvasdict.transform.s)
+    DrawTraces    (isViewFront, canvasdict.transform.s);
 }
 
 function RotateVector(v, angle)
@@ -252,61 +255,86 @@ function RotateVector(v, angle)
 
 
 
-function initRender() {
-  allcanvas = {
-    front: {
-      transform: {
-        x: 0,
-        y: 0,
-        s: 1,
-        panx: 0,
-        pany: 0,
-        zoom: 1,
-        mousestartx: 0,
-        mousestarty: 0,
-        mousedown: false,
-      },
-      layer: "F",
-    },
-    back: {
-      transform: {
-        x: 0,
-        y: 0,
-        s: 1,
-        panx: 0,
-        pany: 0,
-        zoom: 1,
-        mousestartx: 0,
-        mousestarty: 0,
-        mousedown: false,
-      },
-      layer: "B",
-    }
-  };
+function initRender()
+{
+    let allcanvas = {
+        front: {
+            transform: {
+                x: 0,
+                y: 0,
+                s: 1,
+                panx: 0,
+                pany: 0,
+                zoom: 1,
+                mousestartx: 0,
+                mousestarty: 0,
+                mousedown: false,
+            },
+            layer: "F",
+        },
+        back: {
+            transform: {
+                x: 0,
+                y: 0,
+                s: 1,
+                panx: 0,
+                pany: 0,
+                zoom: 1,
+                mousestartx: 0,
+                mousestarty: 0,
+                mousedown: false,
+            },
+            layer: "B",
+        }
+    };
+    // Sets the data strucure to a default value. 
+    globalData.SetAllCanvas(allcanvas);
+    // Set the scale so the PCB will be scaled and centered correctly.
+    render_canvas.ResizeCanvas(globalData.GetAllCanvas().front);
+    render_canvas.ResizeCanvas(globalData.GetAllCanvas().back);
+    
 }
 
 function drawHighlightsOnLayer(canvasdict) 
 {
-  let isViewFront = (canvasdict.layer === "F")
-  render_canvas.ClearHighlights(canvasdict);
-  DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, globalData.getHighlightedRefs());
+    let isViewFront = (canvasdict.layer === "F");
+    render_canvas.ClearHighlights(canvasdict);
+    DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, globalData.getHighlightedRefs());
 }
 
 function drawHighlights(passed) 
 {
-  isPlaced=passed;
-  drawHighlightsOnLayer(allcanvas.front);
-  drawHighlightsOnLayer(allcanvas.back);
+    isPlaced=passed;
+    drawHighlightsOnLayer(globalData.GetAllCanvas().front);
+    drawHighlightsOnLayer(globalData.GetAllCanvas().back);
 }
 
 function resizeAll() 
 {
-  render_canvas.ResizeCanvas(allcanvas.front);
-  render_canvas.ResizeCanvas(allcanvas.back);
-  drawCanvas(allcanvas.front)
-  drawCanvas(allcanvas.back)
+    render_canvas.ResizeCanvas(globalData.GetAllCanvas().front);
+    render_canvas.ResizeCanvas(globalData.GetAllCanvas().back);
+    drawCanvas(globalData.GetAllCanvas().front);
+    drawCanvas(globalData.GetAllCanvas().back);
+}
+
+function SetBoardRotation(value) 
+{
+    /*
+        The board when drawn by default is show rotated -180 degrees. 
+        The following will add 180 degrees to what the user calculates so that the PCB
+        will be drawn in the correct orientation, i.e. displayed as shown in ECAD program. 
+        Internally the range of degrees is stored as 0 -> 360
+    */
+    globalData.SetBoardRotation((value * 5)+180);
+    globalData.writeStorage("boardRotation", globalData.GetBoardRotation());
+    /*
+        Display the correct range of degrees which is -180 -> 180. 
+        The following just remaps 360 degrees to be in the range -180 -> 180.
+    */
+    document.getElementById("rotationDegree").textContent = (globalData.GetBoardRotation()-180);
+    resizeAll();
 }
 
 module.exports = {
-  initRender, resizeAll, drawCanvas, drawHighlights, RotateVector
+    initRender, resizeAll, drawCanvas, drawHighlights, RotateVector, SetBoardRotation
 };

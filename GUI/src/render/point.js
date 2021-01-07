@@ -1,4 +1,9 @@
-
+"use strict";
+/**
+ * 
+ * @param {*} x 
+ * @param {*} y 
+ */
 function Point(x,y)
 {
     this.x = x;
@@ -8,5 +13,5 @@ function Point(x,y)
 
 
 module.exports = {
-  Point
-}
+    Point
+};
