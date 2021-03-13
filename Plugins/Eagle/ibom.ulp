@@ -37,8 +37,10 @@ string outputFileName = dirName + "/" +"pcbdata.json";
 
 int tabcount = 0;
 
-// Since its not not possible to append arrays, I will append strings with the trace information
-// and then process them at the end.
+
+
+string layerNames[];
+
 
 
 
@@ -74,8 +76,8 @@ void PrintKeyValue_KeyString(string key, string value)
 void PrintSignalType_Line(int layer, real x0, real y0, real x1, real y1, real width)
 {
     PrintTabs();
-    printf( "{ \"layer\" : \"%d\",\"pathtype\" : \"line\", \"x0\": %5.5f, \"y0\": %5.5f, \"x1\": %5.5f, \"y1\": %5.5f, \"width\": %5.5f},\n",
-        layer, x0, y0, x1, y1, width
+    printf( "{ \"layer\" : \"%s\",\"layerNumber\" : \"%d\", \"pathtype\" : \"line\", \"x0\": %5.5f, \"y0\": %5.5f, \"x1\": %5.5f, \"y1\": %5.5f, \"width\": %5.5f},\n",
+        layerNames[layer], layer, x0, y0, x1, y1, width
       );
 }
 
@@ -83,8 +85,8 @@ void PrintSignalType_Line(int layer, real x0, real y0, real x1, real y1, real wi
 void PrintSignalType_Arc(int layer, real x0, real y0, real radius, real angle0, real angle1, real width)
 {
     PrintTabs();
-    printf( "{\"layer\" : \"%d\",\"pathtype\" : \"arc\", \"cx0\": %5.5f, \"cy0\": %5.5f, \"radius\": %5.5f,\"angle0\": %5.5f, \"angle1\": %5.5f, \"width\": %5.5f, \"direction\": \"clockwise\"},\n",
-            layer, x0, y0, radius, angle0, angle1, width
+    printf( "{ \"layer\" : \"%s\",\"layerNumber\" : \"%d\",\"pathtype\" : \"arc\", \"cx0\": %5.5f, \"cy0\": %5.5f, \"radius\": %5.5f,\"angle0\": %5.5f, \"angle1\": %5.5f, \"width\": %5.5f, \"direction\": \"clockwise\"},\n",
+            layerNames[layer], layer, x0, y0, radius, angle0, angle1, width
           );
 }
 
@@ -92,7 +94,7 @@ void PrintSignalType_Arc(int layer, real x0, real y0, real radius, real angle0, 
 void PrintSignalType_PolyLine( real x0, real y0, real x1, real y1, real width)
 {
     PrintTabs();
-    printf( "{\"pathtype\" : \"line\", \"x0\": %5.5f, \"y0\": %5.5f, \"x1\": %5.5f, \"y1\": %5.5f, \"width\": %5.5f},\n",
+    printf( "{ \"pathtype\" : \"line\", \"x0\": %5.5f, \"y0\": %5.5f, \"x1\": %5.5f, \"y1\": %5.5f, \"width\": %5.5f},\n",
          x0, y0, x1, y1, width
       );
 }
@@ -110,7 +112,7 @@ void PrintSignalType_PolyArc( real x0, real y0, real radius, real angle0, real a
 void PrintSignalVia_Round(real x, real y, real diameter, real drill)
 {
     PrintTabs();
-    printf( "{\"layer\" : \"via\", \"pathtype\" : \"via_round\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
+    printf( "{\"layer\" : \"Vias\", \"pathtype\" : \"via_round\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
             x, y, diameter, drill
           );
 }
@@ -118,7 +120,7 @@ void PrintSignalVia_Round(real x, real y, real diameter, real drill)
 void PrintSignalVia_Octagon(real x, real y, real diameter, real drill)
 {
     PrintTabs();
-    printf( "{\"layer\" : \"via\", \"pathtype\" : \"via_octagon\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
+    printf( "{\"layer\" : \"Vias\", \"pathtype\" : \"via_octagon\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
             x, y, diameter, drill
           );
 }
@@ -127,7 +129,7 @@ void PrintSignalVia_Octagon(real x, real y, real diameter, real drill)
 void PrintSignalVia_Square(real x, real y, real diameter, real drill)
 {
     PrintTabs();
-    printf( "{\"layer\" : \"via\", \"pathtype\" : \"via_square\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
+    printf( "{\"layer\" : \"Vias\", \"pathtype\" : \"via_square\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
             x, y, diameter, drill
           );
 }
@@ -151,6 +153,9 @@ void PrintPathType_Arc(real x0, real y0, real radius, real angle0, real angle1, 
           );
 }
 
+/*
+    This really just generates test stings that will be displayed
+*/
 void PrintLayer(int layerNumber, string layerName, string location)
 {
     board(B)
@@ -161,7 +166,7 @@ void PrintLayer(int layerNumber, string layerName, string location)
 
         tabcount++;
         PrintTabs();
-        printf("\"name\":\"%s\", \"location\":\"%s\", \"paths\": [\n",layerName, location);
+        printf("\"name\":\"%s\", \"layerNumber\" : \"%d\",\"location\":\"%s\", \"paths\": [\n",layerName, layerNumber, location);
         tabcount++;
         B.texts(T)
         {
@@ -181,78 +186,7 @@ void PrintLayer(int layerNumber, string layerName, string location)
             }
         }
 
-        B.wires(W)
-        {
-            if(W.layer == layerNumber)
-            {
-                if(W.arc) 
-                {
-                    PrintPathType_Arc( u2mm(W.arc.xc), u2mm(W.arc.yc),  u2mm(W.arc.radius),  W.arc.angle1,  W.arc.angle2,  u2mm(W.width));
-                }
-                else
-                {
-                    PrintPathType_Line( u2mm(W.x1),  u2mm(W.y1),  u2mm(W.x2),  u2mm(W.y2),  u2mm(W.width));
-                }
-            }
-        }
 
-
-        B.elements(E)
-        {
-            E.package.wires(W)
-            {
-                // Only take wires on the tplace layer
-                if(W.layer == layerNumber)
-                {
-                    if(W.arc) 
-                    {
-                        PrintPathType_Arc( u2mm(W.arc.xc), u2mm(W.arc.yc),  u2mm(W.arc.radius),  W.arc.angle1,  W.arc.angle2,  u2mm(W.width));
-                    }
-                    else
-                    {
-                        PrintPathType_Line( u2mm(W.x1),  u2mm(W.y1),  u2mm(W.x2),  u2mm(W.y2),  u2mm(W.width));
-                    }
-                }
-            }
-            E.package.texts(T)
-            {
-                if(T.layer == layerNumber)
-                {
-                    T.wires(W)
-                    {
-                        if(W.arc) 
-                        {
-                            PrintPathType_Arc( u2mm(W.arc.xc), u2mm(W.arc.yc),  u2mm(W.arc.radius),  W.arc.angle1,  W.arc.angle2,  u2mm(W.width));
-                        }
-                        else
-                        {
-                            PrintPathType_Line( u2mm(W.x1),  u2mm(W.y1),  u2mm(W.x2),  u2mm(W.y2),  u2mm(W.width));
-                        }
-                    }
-                }
-            }
-            E.attributes(A)
-            {
-                if(A)
-                {
-                    if(A.text.layer == layerNumber)
-                    {
-                        A.text.wires(W)
-                        {
-                            if(W.arc) 
-                            {
-                                PrintPathType_Arc( u2mm(W.arc.xc), u2mm(W.arc.yc),  u2mm(W.arc.radius),  W.arc.angle1,  W.arc.angle2,  u2mm(W.width));
-                            }
-                            else
-                            {
-                                PrintPathType_Line( u2mm(W.x1),  u2mm(W.y1),  u2mm(W.x2),  u2mm(W.y2),  u2mm(W.width));
-                            }
-                        }
-                    }
-                    
-                }
-            }
-        }
         tabcount--;
         PrintTabs();
         tabcount--;
@@ -264,26 +198,40 @@ void PrintLayer(int layerNumber, string layerName, string location)
     }
 }
 
+/*
+    Dumps all text on the pcb and within internal layers. 
+    Tex is represented as wire/traces since the text is internally stored as that.
+*/
 void GenerateSilkscreen( void )
 {
-
         tabcount++;
-        // Print to the file the start of the edges section. This will be an array of wire segments
+
         PrintTabs();
         printf("\"layers\": [\n");
 
-        PrintLayer(LAYER_TPLACE, "tplace", "F");
-        PrintLayer(LAYER_BPLACE, "bplace", "B");
+        board(B)
+        {
+            B.layers(L)
+            {
+                if(L.used)
+                {
+                    PrintLayer(L.number, L.name, "F");
+                }
+            }
+        }
 
-        PrintLayer(LAYER_TNAMES, "tnames", "F");
-        PrintLayer(LAYER_BNAMES, "bnames", "B");
+        //PrintLayer(LAYER_TPLACE, "tplace", "F");
+        //PrintLayer(LAYER_BPLACE, "bplace", "B");
+
+        //PrintLayer(LAYER_TNAMES, "tnames", "F");
+        //PrintLayer(LAYER_BNAMES, "bnames", "B");
         
-        PrintLayer(LAYER_TVALUES, "tvalues", "F");
-        PrintLayer(LAYER_BVALUES, "bvalues", "B");
+        //PrintLayer(LAYER_TVALUES, "tvalues", "F");
+        //PrintLayer(LAYER_BVALUES, "bvalues", "B");
 
 
-        PrintLayer(LAYER_TDOCU, "tdocu", "F");
-        PrintLayer(LAYER_BDOCU, "bdocu", "B");
+        //PrintLayer(LAYER_TDOCU, "tdocu", "F");
+        //PrintLayer(LAYER_BDOCU, "bdocu", "B");
 
         PrintTabs();
         tabcount--;
@@ -545,7 +493,6 @@ void GeneratePCBShape( void )
 }
 
 
-// x0 and y0 represent the center of the circle the arc is based on
 void PrintTraces(void)
 {
 
@@ -567,6 +514,7 @@ void PrintTraces(void)
                     PrintSignalType_Line(W.layer, u2mm(W.x1), u2mm(W.y1), u2mm(W.x2), u2mm(W.y2), u2mm(W.width));
                 }
             }
+
             S.vias(V)
             {
                 if(V.shape[LAYER_TOP] ==  VIA_SHAPE_SQUARE)
@@ -600,7 +548,7 @@ void PrintTraces(void)
                         x0 = C.x1;
                         y0 = C.y1;
                         PrintTabs();
-                        printf("{\"layer\": \"%d\", \"pathtype\" : \"polygon\", \"positive\": \"%d\", \"segments\": [\n",P.layer, isPositive);
+                        printf("{\"layer\" : \"%s\",\"layerNumber\" : \"%d\", \"pathtype\" : \"polygon\", \"positive\": \"%d\", \"segments\": [\n",layerNames[P.layer], P.layer, isPositive);
                         tabcount++;
                     }
 
@@ -851,6 +799,16 @@ void GenerateParts( void )
 
 output(outputFileName,"wt")
 {
+     board(B)
+    {
+        B.layers(L)
+        {
+            layerNames[L.number] = L.name;
+        }
+    }
+
+
+
     printf("var pcbdata =  {\n");
     GenerateHeader();
     GenerateBoard();

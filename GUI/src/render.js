@@ -81,19 +81,19 @@ function DrawTraces(isViewFront, scalefactor)
             if(segment.pathtype == "line")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
-                render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
+                render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layerNumber-1));
             }
             else if(segment.pathtype == "arc")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
-                render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
+                render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layerNumber-1));
             }
             else if (segment.pathtype == "polygon")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
                 // Need to specify a color at full transparency so that a negative polygon 
                 // can be subtracted from a positive polygon.
-                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layer-1) : "#000000FF";
+                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layerNumber-1) : "#000000FF";
                 render_trace.Polygon(ctx, segment.segments, lineWidth, color, segment.positive === "1");
             }
             else if( segment.pathtype == "via_round")
@@ -147,6 +147,16 @@ function DrawSilkscreen(isViewFront, scalefactor)
     for (let layer of pcbdata.board.layers)
     {
         let ctx = pcb.GetLayerCanvas(layer.name, isViewFront).getContext("2d");
+
+       if(layer.layerNumber-1 < 16)
+        {
+            color = colorMap.GetTraceColor(layer.layerNumber-1);
+        }
+        else
+        {
+            color = "#aa4"
+        }
+        
         for (let path of layer.paths)
         {
             if(path.pathtype == "line")
@@ -244,8 +254,9 @@ function drawCanvas(canvasdict)
     let isViewFront = (canvasdict.layer === "F");
     DrawPCBEdges  (isViewFront, canvasdict.transform.s);
     DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
-    DrawSilkscreen(isViewFront, canvasdict.transform.s);
     DrawTraces    (isViewFront, canvasdict.transform.s);
+    // Draw last so that text is not erased when drawing polygons.
+    DrawSilkscreen(isViewFront, canvasdict.transform.s);
 }
 
 function RotateVector(v, angle)
