@@ -1,6 +1,6 @@
-var Point               = require('./point.js').Point
+"use strict";
 
-
+var Point = require("./point.js").Point;
 
 function Arc(guiContext, centerPoint, radius, angleStart, angleEnd, renderOptions )
 {
@@ -31,7 +31,7 @@ function Arc(guiContext, centerPoint, radius, angleStart, angleEnd, renderOption
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -70,7 +70,7 @@ function Line(guiContext, startPoint, endPoint, renderOptions )
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -81,7 +81,7 @@ function Line(guiContext, startPoint, endPoint, renderOptions )
 
 }
 
-function Polygon(guiContext, centerPoint, vertices, angle, renderOptions )
+function RegularPolygon(guiContext, centerPoint, vertices, angle, renderOptions )
 {
 
     guiContext.save();
@@ -128,7 +128,7 @@ function Polygon(guiContext, centerPoint, vertices, angle, renderOptions )
     // If fill is true, fill the box, otherwise just make an outline
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -138,6 +138,56 @@ function Polygon(guiContext, centerPoint, vertices, angle, renderOptions )
     guiContext.restore();
 
 }
+
+
+function IrregularPolygon(guiContext, vertices, renderOptions )
+{
+
+    guiContext.save();
+    if( renderOptions.color)
+    {
+        guiContext.fillStyle  =  renderOptions.color;
+        guiContext.strokeStyle =  renderOptions.color;        
+    }
+    // If overwriting line width, then update that here
+    if(renderOptions.lineWidth)
+    {
+        guiContext.lineWidth = renderOptions.lineWidth;
+    }
+
+    if(renderOptions.globalAlpha)
+    {
+        guiContext.globalAlpha = renderOptions.globalAlpha;
+    }
+
+    if(renderOptions.compositionType)
+    {
+        guiContext.globalCompositeOperation  = renderOptions.compositionType;
+    }
+
+    guiContext.beginPath();
+    guiContext.moveTo(vertices[0].x,vertices[0].y);
+
+    for(var i = 1; i < vertices.length; i++)
+    {
+        guiContext.lineTo(vertices[i].x,vertices[i].y);
+    }
+    guiContext.closePath();
+
+    // If fill is true, fill the box, otherwise just make an outline
+    if(renderOptions.fill)
+    {
+        guiContext.fill();
+    }
+    else
+    {
+        guiContext.stroke();
+    }
+
+    guiContext.restore();
+
+}
+
 
 function Circle(guiContext, centerPoint, radius, renderOptions)
 {
@@ -160,7 +210,7 @@ function Circle(guiContext, centerPoint, radius, renderOptions)
 
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -181,15 +231,15 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
 {
 
     // Center point of both circles.
-    let centerPoint1 = new Point(0, -height/2)
-    let centerPoint2 = new Point(0, height/2)
+    let centerPoint1 = new Point(0, -height/2);
+    let centerPoint2 = new Point(0, height/2);
     let radius = width/2;
 
     guiContext.save();
     if( renderOptions.color)
     {
         guiContext.fillStyle  =  renderOptions.color;
-        guiContext.strokeStyle =  renderOptions.color;        
+        guiContext.strokeStyle =  renderOptions.color;
     }
 
     /*
@@ -214,7 +264,7 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
     
     if(renderOptions.fill)
     {
-        guiContext.fill()
+        guiContext.fill();
     }
     else
     {
@@ -227,5 +277,5 @@ function Oval(guiContext, centerPoint, height, width, angle, renderOptions)
 
 
 module.exports = {
-  Arc, Line, Polygon, Circle, Oval
-}
+    Arc, Line, RegularPolygon, IrregularPolygon, Circle, Oval
+};

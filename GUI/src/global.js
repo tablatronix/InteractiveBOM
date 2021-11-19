@@ -1,39 +1,56 @@
+"use strict";
+
 /*************************************************
               Board Rotation                    
 *************************************************/
-var storage
-var storagePrefix = 'INTERACTIVE_PCB__' + pcbdata.metadata.title + '__' + pcbdata.metadata.revision + '__'
+let storage = undefined;
+const storagePrefix = "INTERACTIVE_PCB__" + pcbdata.metadata.title + "__" + pcbdata.metadata.revision + "__"
 
-function initStorage (key) {
-  try {
-    window.localStorage.getItem("blank");
-    storage = window.localStorage;
-  } catch (e) {
-    console.log("Storage init error");
-    // localStorage not available
-  }
-  if (!storage) {
-    try {
-      window.sessionStorage.getItem("blank");
-      storage = window.sessionStorage;
-    } catch (e) {
-      // sessionStorage also not available
+function initStorage ()
+{
+    try
+    {
+        window.localStorage.getItem("blank");
+        storage = window.localStorage;
     }
-  }
+    catch (e)
+    {
+        console.log("ERROR: Storage init error");
+    }
+
+    if (!storage)
+    {
+        try
+        {
+            window.sessionStorage.getItem("blank");
+            storage = window.sessionStorage;
+        }
+        catch (e)
+        {
+            console.log("ERROR: Session storage not available");
+            // sessionStorage also not available
+        }
+    }
 }
 
-function readStorage(key) {
-  if (storage) {
-    return storage.getItem(storagePrefix + '#' + key);
-  } else {
-    return null;
-  }
+function readStorage(key)
+{
+    if (storage)
+    {
+        return storage.getItem(storagePrefix + "#" + key);
+    }
+    else
+    {
+        return null;
+    }
 }
 
-function writeStorage(key, value) {
-  if (storage) {
-    storage.setItem(storagePrefix + '#' + key, value);
-  }
+function writeStorage(key, value)
+{
+    if (storage)
+    {
+        storage.setItem(storagePrefix + "#" + key, value);
+    }
 }
 
 /************************************************/
@@ -41,13 +58,15 @@ function writeStorage(key, value) {
 /*************************************************
               Highlighted Refs                    
 *************************************************/
-var highlightedRefs = [];
+let highlightedRefs = [];
 
-function setHighlightedRefs(refs){
-    highlightedRefs = refs.split(',');
+function setHighlightedRefs(refs)
+{
+    highlightedRefs = refs.split(",");
 }
 
-function getHighlightedRefs(){
+function getHighlightedRefs()
+{
     return highlightedRefs;
 }
 /************************************************/
@@ -55,15 +74,16 @@ function getHighlightedRefs(){
 /*************************************************
               Redraw On Drag                      
 *************************************************/
-var redrawOnDrag = true;
+let redrawOnDrag = true;
 
-  
-function setRedrawOnDrag(value){
+function setRedrawOnDrag(value)
+{
     redrawOnDrag = value;
     writeStorage("redrawOnDrag", value);
 }
 
-function getRedrawOnDrag(){
+function getRedrawOnDrag()
+{
     return redrawOnDrag;
 }
 
@@ -73,15 +93,16 @@ function getRedrawOnDrag(){
 /*************************************************
                  Debug Mode                       
 *************************************************/
-var debugMode = false;
+let debugMode = false;
 
-  
-function setDebugMode(value){
+function setDebugMode(value)
+{
     debugMode = value;
     writeStorage("debugMode", value);
 }
 
-function getDebugMode(){
+function getDebugMode()
+{
     return debugMode;
 }
 
@@ -90,35 +111,41 @@ function getDebugMode(){
 /*************************************************
 layer Split
 *************************************************/
-var layersplit;
+let layersplit;
 
-function setLayerSplit(value){
+function setLayerSplit(value)
+{
     layersplit = value;
 }
 
-function getLayerSplit(){
+function getLayerSplit()
+{
     return layersplit;
 }
 
-function destroyLayerSplit(){
-    layersplit.destroy()
+function destroyLayerSplit()
+{
+    layersplit.destroy();
 }
 
 /*************************************************
 BOM Split
 *************************************************/
-var bomsplit;
+let bomsplit;
 
-function setBomSplit(value){
+function setBomSplit(value)
+{
     bomsplit = value;
 }
 
-function getBomSplit(){
+function getBomSplit()
+{
     return bomsplit;
 }
 
-function destroyBomSplit(){
-    bomsplit.destroy()
+function destroyBomSplit()
+{
+    bomsplit.destroy();
 }
 
 /************************************************/
@@ -126,18 +153,21 @@ function destroyBomSplit(){
 /*************************************************
 Canvas Split
 *************************************************/
-var canvassplit;
+let canvassplit;
 
-function setCanvasSplit(value){
+function setCanvasSplit(value)
+{
     canvassplit = value;
 }
 
-function getCanvasSplit(){
+function getCanvasSplit()
+{
     return canvassplit;
 }
 
-function destroyCanvasSplit(){
-    canvassplit.destroy()
+function destroyCanvasSplit()
+{
+    canvassplit.destroy();
 }
 
 function collapseCanvasSplit(value)
@@ -145,7 +175,8 @@ function collapseCanvasSplit(value)
     canvassplit.collapse(value);
 }
 
-function setSizesCanvasSplit(value){
+function setSizesCanvasSplit()
+{
     canvassplit.setSizes([50, 50]);
 }
 
@@ -154,7 +185,7 @@ function setSizesCanvasSplit(value){
 /*************************************************
 Canvas Layout
 *************************************************/
-var canvaslayout = "FB";
+let canvaslayout = "FB";
 
 /*XXX Found a bug at startup. Code assumes that canvas layout 
 is in one of three states. then system fails. he bug was that the 
@@ -165,16 +196,20 @@ So no is check that if default is sent in then set the layout to FB mode.
 is in one of the three valid states. If not then set to FB, otherwise set to one of
 the three valid states
 */
-function setCanvasLayout(value){
-    if(value == 'default'){
-        canvaslayout = 'FB'
+function setCanvasLayout(value)
+{
+    if(value == "default")
+    {
+        canvaslayout = "FB";
     }
-    else {
+    else
+    {
         canvaslayout = value;
     }
 }
 
-function getCanvasLayout(){
+function getCanvasLayout()
+{
     return canvaslayout;
 }
 
@@ -183,13 +218,15 @@ function getCanvasLayout(){
 /*************************************************
 BOM Layout
 *************************************************/
-var bomlayout = "default";
+let bomlayout = "default";
 
-function setBomLayout(value){
+function setBomLayout(value)
+{
     bomlayout = value;
 }
 
-function getBomLayout(){
+function getBomLayout()
+{
     return bomlayout;
 }
 
@@ -198,13 +235,15 @@ function getBomLayout(){
 /*************************************************
 BOM Sort Function
 *************************************************/
-var bomSortFunction = null;
+let bomSortFunction = null;
 
-function setBomSortFunction(value){
+function setBomSortFunction(value)
+{
     bomSortFunction = value;
 }
 
-function getBomSortFunction(){
+function getBomSortFunction()
+{
     return bomSortFunction;
 }
 
@@ -213,13 +252,15 @@ function getBomSortFunction(){
 /*************************************************
 Current Sort Column
 *************************************************/
-var currentSortColumn = null;
+let currentSortColumn = null;
 
-function setCurrentSortColumn(value){
+function setCurrentSortColumn(value)
+{
     currentSortColumn = value;
 }
 
-function getCurrentSortColumn(){
+function getCurrentSortColumn()
+{
     return currentSortColumn;
 }
 
@@ -228,13 +269,15 @@ function getCurrentSortColumn(){
 /*************************************************
 Current Sort Order
 *************************************************/
-var currentSortOrder = null;
+let currentSortOrder = null;
 
-function setCurrentSortOrder(value){
+function setCurrentSortOrder(value)
+{
     currentSortOrder = value;
 }
 
-function getCurrentSortOrder(){
+function getCurrentSortOrder()
+{
     return currentSortOrder;
 }
 
@@ -243,13 +286,15 @@ function getCurrentSortOrder(){
 /*************************************************
 Current Highlighted Row ID
 *************************************************/
-var currentHighlightedRowId;
+let currentHighlightedRowId;
 
-function setCurrentHighlightedRowId(value){
+function setCurrentHighlightedRowId(value)
+{
     currentHighlightedRowId = value;
 }
 
-function getCurrentHighlightedRowId(){
+function getCurrentHighlightedRowId()
+{
     return currentHighlightedRowId;
 }
 
@@ -258,9 +303,10 @@ function getCurrentHighlightedRowId(){
 /*************************************************
 Highlight Handlers
 *************************************************/
-var highlightHandlers = [];
+let highlightHandlers = [];
 
-function setHighlightHandlers(values){
+function setHighlightHandlers(values)
+{
     highlightHandlers = values;
 }
 
@@ -268,7 +314,8 @@ function getHighlightHandlers(){
     return highlightHandlers;
 }
 
-function pushHighlightHandlers(value){
+function pushHighlightHandlers(value)
+{
     highlightHandlers.push(value);
 }
 
@@ -277,13 +324,15 @@ function pushHighlightHandlers(value){
 /*************************************************
 Checkboxes
 *************************************************/
-var checkboxes = [];
+let checkboxes = [];
 
-function setCheckboxes(values){
+function setCheckboxes(values)
+{
     checkboxes = values;
 }
 
-function getCheckboxes(){
+function getCheckboxes()
+{
     return checkboxes;
 }
 
@@ -292,13 +341,15 @@ function getCheckboxes(){
 /*************************************************
 BOM Checkboxes
 *************************************************/
-var bomCheckboxes = "";
+let bomCheckboxes = "";
 
-function setBomCheckboxes(values){
+function setBomCheckboxes(values)
+{
     bomCheckboxes = values;
 }
 
-function getBomCheckboxes(){
+function getBomCheckboxes()
+{
     return bomCheckboxes;
 }
 /************************************************/
@@ -306,13 +357,15 @@ function getBomCheckboxes(){
 /*************************************************
 Remove BOM Entries
 *************************************************/
-var removeBOMEntries = "";
+let removeBOMEntries = "";
 
-function setRemoveBOMEntries(values){
+function setRemoveBOMEntries(values)
+{
     removeBOMEntries = values;
 }
 
-function getRemoveBOMEntries(){
+function getRemoveBOMEntries()
+{
     return removeBOMEntries;
 }
 /************************************************/
@@ -321,9 +374,10 @@ function getRemoveBOMEntries(){
 /*************************************************
 Remove BOM Entries
 *************************************************/
-var additionalAttributes = "";
+let additionalAttributes = "";
 
-function setAdditionalAttributes(values){
+function setAdditionalAttributes(values)
+{
     additionalAttributes = values;
 }
 
@@ -336,11 +390,12 @@ function getAdditionalAttributes(){
 /*************************************************
 Highlight Pin 1
 *************************************************/
-var highlightpin1 = false;
+let highlightpin1 = false;
 
-function setHighlightPin1(value) {
-  writeStorage("highlightpin1", value);
-  highlightpin1 = value;
+function setHighlightPin1(value)
+{
+    writeStorage("highlightpin1", value);
+    highlightpin1 = value;
 }
 
 function getHighlightPin1(){
@@ -352,14 +407,16 @@ function getHighlightPin1(){
 /*************************************************
 Last Clicked Ref
 *************************************************/
-var lastClickedRef;
+let lastClickedRef;
 
-function setLastClickedRef(value) {
+function setLastClickedRef(value)
+{
     lastClickedRef = value;
 }
 
-function getLastClickedRef() {
-  return lastClickedRef;
+function getLastClickedRef()
+{
+    return lastClickedRef;
 }
 
 /************************************************/
@@ -368,14 +425,16 @@ function getLastClickedRef() {
 /*************************************************
 Combine Values
 *************************************************/
-var combineValues = false;
+let combineValues = false;
 
-function setCombineValues(value) {
-  writeStorage("combineValues", value);
-  combineValues = value;
+function setCombineValues(value)
+{
+    writeStorage("combineValues", value);
+    combineValues = value;
 }
 
-function getCombineValues(){
+function getCombineValues()
+{
     return combineValues;
 }
 /************************************************/
@@ -385,40 +444,69 @@ function getCombineValues(){
 /*************************************************
 Combine Values
 *************************************************/
-var hidePlacedParts = false;
+let hidePlacedParts = false;
 
-function setHidePlacedParts(value) {
-  writeStorage("hidePlacedParts", value);
-  hidePlacedParts = value;
+function setHidePlacedParts(value)
+{
+    writeStorage("hidePlacedParts", value);
+    hidePlacedParts = value;
 }
 
-function getHidePlacedParts(){
+function getHidePlacedParts()
+{
     return hidePlacedParts;
 }
 /************************************************/
 
+let allcanvas =  undefined;
+
+function SetAllCanvas(value)
+{
+    allcanvas = value;
+}
+
+function GetAllCanvas()
+{
+    return allcanvas;
+}
+
+
+let boardRotation = 0;
+function SetBoardRotation(value)
+{
+    boardRotation = value;
+}
+
+function GetBoardRotation()
+{
+    return boardRotation;
+}
+
 
 module.exports = {
-  initStorage                , readStorage                , writeStorage       ,
-  setHighlightedRefs         , getHighlightedRefs         ,
-  setRedrawOnDrag            , getRedrawOnDrag            ,
-  setDebugMode               , getDebugMode               ,
-  setBomSplit                , getBomSplit                , destroyBomSplit    ,
-  setLayerSplit                , getLayerSplit                , destroyLayerSplit    ,
-  setCanvasSplit             , getCanvasSplit             , destroyCanvasSplit , collapseCanvasSplit , setSizesCanvasSplit,
-  setCanvasLayout            , getCanvasLayout            ,
-  setBomLayout               , getBomLayout               ,
-  setBomSortFunction         , getBomSortFunction         ,
-  setCurrentSortColumn       , getCurrentSortColumn       ,
-  setCurrentSortOrder        , getCurrentSortOrder        ,
-  setCurrentHighlightedRowId , getCurrentHighlightedRowId ,
-  setHighlightHandlers       , getHighlightHandlers       , pushHighlightHandlers ,
-  setCheckboxes              , getCheckboxes              ,
-  setBomCheckboxes           , getBomCheckboxes           ,
-  setRemoveBOMEntries        , getRemoveBOMEntries        ,
-  setAdditionalAttributes    , getAdditionalAttributes    ,
-  setHighlightPin1           , getHighlightPin1           ,
-  setLastClickedRef          , getLastClickedRef          ,
-  setCombineValues           , getCombineValues           ,
-  setHidePlacedParts         , getHidePlacedParts
+    initStorage                , readStorage                , writeStorage          ,
+    setHighlightedRefs         , getHighlightedRefs         ,
+    setRedrawOnDrag            , getRedrawOnDrag            ,
+    setDebugMode               , getDebugMode               ,
+    setBomSplit                , getBomSplit                , destroyBomSplit       ,
+    setLayerSplit              , getLayerSplit              , destroyLayerSplit     ,
+    setCanvasSplit             , getCanvasSplit             , destroyCanvasSplit    , collapseCanvasSplit , setSizesCanvasSplit ,
+    setCanvasLayout            , getCanvasLayout            ,
+    setBomLayout               , getBomLayout               ,
+    setBomSortFunction         , getBomSortFunction         ,
+    setCurrentSortColumn       , getCurrentSortColumn       ,
+    setCurrentSortOrder        , getCurrentSortOrder        ,
+    setCurrentHighlightedRowId , getCurrentHighlightedRowId ,
+    setHighlightHandlers       , getHighlightHandlers       , pushHighlightHandlers ,
+    setCheckboxes              , getCheckboxes              ,
+    setBomCheckboxes           , getBomCheckboxes           ,
+    setRemoveBOMEntries        , getRemoveBOMEntries        ,
+    setAdditionalAttributes    , getAdditionalAttributes    ,
+    setHighlightPin1           , getHighlightPin1           ,
+    setLastClickedRef          , getLastClickedRef          ,
+    setCombineValues           , getCombineValues           ,
+    setHidePlacedParts         , getHidePlacedParts         ,
+    SetAllCanvas               , GetAllCanvas               ,
+    SetBoardRotation           , GetBoardRotation
+
 };
