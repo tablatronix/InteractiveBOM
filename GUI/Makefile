@@ -17,7 +17,8 @@ clean:
 	  pcbdata.json
 
 index.js: $(JS_DEPS)/.stamp $(JS_SRCS) pcbdata.json
-	$(BROWSERIFY) src/htmlFunctions.js --debug --outfile $@
 
-pcbdata.json: ../Examples/Eagle/Arduino_MEGA2560_ref/pcbdata.json
+	$(BROWSERIFY) ./src/ibom.js ./src/render.js ./src/htmlFunctions.js ./src/pcb.js ./src/colormap.js --debug --outfile $@
+
+pcbdata.json: ../Examples/Eagle/Simple_BRD/pcbdata.json
 	cp $< $@
