@@ -1,5 +1,19 @@
 # Changelog
 
+
+## Version 2.0-RC2
+### Added
+- Integrated make based build
+## Changed
+- Use npm to track dependencies instead of explicitly downloading them.
+- Added split.js as a dependency so no longer need to have file in vendor folder. 
+### Removed
+- Cleanup of project to remove files that are not needed.
+  - Old releases are now kept on Github
+  - PCB data files were all moved to be under Examples instead of lingering in multiple locations.
+  - Examples of using split.js were included in the source but were actually not used.
+  - Removed build.bat as make is used instead.
+  - Removed README in source folder as documentation was out of sync with actually building project.
 ## Version 1.x
 
 ### Added
