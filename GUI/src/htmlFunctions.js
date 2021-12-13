@@ -1,6 +1,7 @@
 var globalData = require("./global.js");
 var render     = require("./render.js");
 var ibom       = require("./ibom.js");
+var layerTable = require("./layer_table.js")
 
 const boardRotation = document.getElementById("boardRotation");
 boardRotation.oninput=function()
@@ -176,6 +177,7 @@ load_pcb.onchange=function()
     reader.onload = function loadHandler(event) {
                         pcbdata = JSON.parse(event.target.result);
                         console.log(pcbdata);
+                        layerTable.clearLayerTable();
                     };
 
     reader.onerror = function errorHandler(evt) {

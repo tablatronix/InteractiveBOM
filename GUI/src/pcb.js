@@ -83,7 +83,7 @@ function GetBOM()
     return BOM;
 }
 
-// TAkes a BOM table and a filter function. The filter 
+// Takes a BOM table and a filter function. The filter 
 // function is used onthe provided table to remove 
 // any part that satisfy the filter
 function filterBOMTable(bomtable, filterFunction)

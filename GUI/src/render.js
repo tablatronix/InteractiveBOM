@@ -8,7 +8,7 @@ var render_via         = require("./render/render_via.js");
 var render_trace       = require("./render/render_trace.js");
 var render_boardedge   = require("./render/render_boardedge.js");
 var render_silkscreen  = require("./render/render_silkscreen.js");
-var render_canvas      = require("./render/render_canvas.js");
+var render_canvas      = require("./render/render_Canvas.js");
 var render_boundingbox = require("./render/render_boundingbox.js");
 var Point              = require("./render/point.js").Point;
 var pcb                = require("./pcb.js");
@@ -19,25 +19,24 @@ var colorMap           = require("./colormap.js");
 let isPlaced = false;
 
 
-
 function DrawPad(ctx, pad, color) 
 {
     if (pad.shape == "rect") 
     {
         render_pads.Rectangle(ctx, pad, color);
-    } 
+    }
     else if (pad.shape == "oblong") 
     {
         render_pads.Oblong(ctx, pad, color);
-    } 
+    }
     else if (pad.shape == "round") 
     {
         render_pads.Round(ctx, pad, color);
-    } 
+    }
     else if (pad.shape == "octagon") 
     {
         render_pads.Octagon(ctx, pad, color);
-    } 
+    }
     else
     {
         console.log("ERROR: Unsupported pad type ", pad.shape);
@@ -264,8 +263,6 @@ function RotateVector(v, angle)
     return render_canvas.rotateVector(v, angle);
 }
 
-
-
 function initRender()
 {
     let allcanvas = {
@@ -303,7 +300,6 @@ function initRender()
     // Set the scale so the PCB will be scaled and centered correctly.
     render_canvas.ResizeCanvas(globalData.GetAllCanvas().front);
     render_canvas.ResizeCanvas(globalData.GetAllCanvas().back);
-    
 }
 
 function drawHighlightsOnLayer(canvasdict) 
