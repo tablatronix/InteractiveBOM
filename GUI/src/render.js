@@ -258,6 +258,11 @@ function drawCanvas(canvasdict)
     DrawSilkscreen(isViewFront, canvasdict.transform.s);
 }
 
+function ClearCanvas(canvasdict)
+{
+   initRender();
+}
+
 function RotateVector(v, angle)
 {
     return render_canvas.rotateVector(v, angle);
@@ -343,5 +348,5 @@ function SetBoardRotation(value)
 }
 
 module.exports = {
-    initRender, resizeAll, drawCanvas, drawHighlights, RotateVector, SetBoardRotation
+    initRender, resizeAll, drawCanvas, drawHighlights, RotateVector, SetBoardRotation, ClearCanvas
 };
