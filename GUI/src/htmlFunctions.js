@@ -155,3 +155,37 @@ pcb_btn.onclick=function()
 {
     ibom.changeBomLayout("PCB");
 };
+
+
+
+
+
+const load_pcb = document.getElementById("pcbFileInput");
+load_pcb.onchange=function()
+{
+  // Check for the various File API support.
+  if (window.FileReader)
+  {
+      // FileReader are supported.
+
+     var reader = new FileReader();
+    // Read file into memory as UTF-8
+    reader.readAsText(load_pcb.files[0]);
+
+    // Handle errors load
+    reader.onload = function loadHandler(event) {
+                        pcbdata = JSON.parse(event.target.result);
+                        console.log(pcbdata);
+                    };
+
+    reader.onerror = function errorHandler(evt) {
+                          if(evt.target.error.name == "NotReadableError") {
+                              alert("Cannot read file !");
+                          }
+                    };
+  }
+  else
+  {
+      alert('FileReader are not supported in this browser.');
+  }
+}
