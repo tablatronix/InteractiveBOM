@@ -2,6 +2,7 @@
 var render_lowlevel     = require("./render_lowlevel.js");
 var Point               = require("./point.js").Point;
 
+
 // Line width is not included as part of the trace as it will depend on the current gui scale factor.
 function Arc(guiContext, trace, lineWidth, color)
 {
