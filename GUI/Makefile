@@ -1,5 +1,7 @@
 JS_DEPS := node_modules
 JS_SRCS := $(wildcard src/*.js)
+JS_SRCS += $(wildcard src/*/*.js)
+
 
 BROWSERIFY := npx browserify
 
@@ -17,8 +19,10 @@ clean:
 	  pcbdata.json
 
 index.js: $(JS_DEPS)/.stamp $(JS_SRCS) pcbdata.json
-
 	$(BROWSERIFY) ./src/ibom.js ./src/render.js ./src/htmlFunctions.js ./src/pcb.js ./src/colormap.js --debug --outfile $@
 
 pcbdata.json: ../Examples/Eagle/Simple_BRD/pcbdata.json
 	cp $< $@
+
+
+print-%  : ; @echo $* = $($*)
