@@ -94,37 +94,73 @@ File specification is provided in eBPF form and validated using [BNF Playground]
 ```
 /* TOP LEVEL */
 <FILE>             ::= "{" <PCB_DATA> "}"
-
 <PCB_DATA>         ::= <METADATA> "," <BOARD> "," <PARTS>
 
-/*************** METADATA  ***************/
-<METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> <ECAD> <PROJECT_NAME> <DATE> <NUMBER_PARTS> "}"
+/*************** METADATA SECTION ***************/
+<METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> "," <ECAD> "," <PROJECT_NAME> "," <DATE> "," <NUMBER_PARTS> "}"
 
-<PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER> ","
+<PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER>
 
-<ECAD>             ::= "\"ecad\":" <ECAD_PROGRAM> ","
+<ECAD>             ::= "\"ecad\":" <ECAD_PROGRAM>
 <ECAD_PROGRAM>     ::= <EAGLE_CAD>
 <EAGLE_CAD>        ::= "\"EAGLE\"" | "\"eagle\"" | "\"Eagle\""
 
-<PROJECT_NAME>     ::= "\"project_name\"" ":" "\"" <STRING>  "\"" ","
+<PROJECT_NAME>     ::= "\"project_name\"" ":" "\"" <STRING>  "\""
 
-<DATE>             ::= "\"date\":" "\"" <DATE_STRING> "\"" ","
+<DATE>             ::= "\"date\":" "\"" <DATE_STRING> "\""
 
-<NUMBER_PARTS>     ::= "\"number_parts\":" "{" <PARTS_TOP> <PARTS_BOTTOM> "}"
-<PARTS_TOP>        ::= "\"top\":" <UNSIGNED_INTEGER> ","
+<NUMBER_PARTS>     ::= "\"number_parts\":" "{" <PARTS_TOP> "," <PARTS_BOTTOM> "}"
+<PARTS_TOP>        ::= "\"top\":" <UNSIGNED_INTEGER>
 <PARTS_BOTTOM>     ::= "\"bottom\":" <UNSIGNED_INTEGER>
 
 
-/*************** BOARD DATA ***************/
-<BOARD>     ::= "\"board\":" "{" <PCB_SHAPE> "}"
-<PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "}"
+/*************** BOARD SECTION ***************/
+<BOARD>         ::= "\"board\":" "{" <BOARD_SHAPE> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
+<BOARD_SHAPE>   ::= <PCB_SHAPE>
+<BOARD_TRACES>  ::= "\"traces\":" "[" <PCB_TRACES> "]"
+<BOARD_LAYERS>  ::= "\"layers\":" "[" <PCB_LAYERS> "]"
 
 
-/*************** PART DATA ***************/
+<PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "," <EDGES> "}"
+<EDGES>     ::= "\"edges\":" "[" <PATHS> "]"
+
+<PCB_TRACES> ::= <PCB_TRACE> | <PCB_TRACE> "," <PCB_TRACES>
+<PCB_TRACE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"segments\":" "[" <SEGMENT> "]" "}"
+
+<PCB_LAYERS> ::= <PCB_LAYER> | <PCB_LAYER> "," <PCB_LAYERS>
+<PCB_LAYER>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"layerNumber\":" <UNSIGNED_INTEGER> "," "\"paths\":" "[" <PATHS> "]" "}"
+
+
+/*************** PARTS SECTION ***************/
 <PARTS> ::= "\"parts\":" "[" "]"
 
 
+
+
+
 /*************** COMMON RULES ***************/
+
+<SEGMENT>          ::= <PATHS> | <POLYGONS> | <VIAS>
+
+<PATHS>            ::= <PATH>    | <PATH>    "," <PATHS>
+<POLYGONS>         ::= <POLYGON> | <POLYGON> "," <POLYGONS>
+<VIAS>             ::= <VIA>     | <VIA>     "," <VIAS>
+
+<PATH>             ::= <LINE> | <ARC>
+<LINE>             ::= "{" "\"type\"" ":" "\"line\"" "," "\"x0\"" ":" <REAL_NUMBER> "," "\"y0\"" ":" <REAL_NUMBER> "," "\"x1\"" ":" <REAL_NUMBER> "," "\"y1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "}"
+<ARC>              ::= "{" "\"type\"" ":" "\"arc\"" "," "\"cx0\"" ":" <REAL_NUMBER> "," "\"cy0\"" ":" <REAL_NUMBER> "," "\"radius\"" ":" <REAL_NUMBER> "," "\"angle0\"" ":" <REAL_NUMBER> "," "\"angle1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "," "\"direction\"" ":" <ARC_DIRECTION> "}"
+<POLYGON>          ::= "{" "\"type\"" ":" "\"polygon\"" "," "\"positive\"" ":" <POLYGON_DIRECTION> "," "\"segments\"" ":" "[" <PATHS> "]" "}"
+<VIA>              ::= <VIA_ROUND> | <VIA_SQUARE> | <VIA_OCTOGON>
+
+
+<ARC_DIRECTION>     ::= "\"clockwise\"" | "\"counterclockwise\""
+<POLYGON_DIRECTION> ::= "1" | "0"
+
+<VIA_ROUND>    ::= "{" "\"type\"" ":" "\"via_round\""   "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+<VIA_SQUARE>   ::= "{" "\"type\"" ":" "\"via_square\""  "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+<VIA_OCTOGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+
+
 
 <BOUNDING_BOX> ::= "\"bounding_box\":" "{" <X0> "," <Y0> "," <X1> "," <Y1> "}"
 <X0>           ::= "\"x0\":" <REAL_NUMBER>
@@ -132,8 +168,8 @@ File specification is provided in eBPF form and validated using [BNF Playground]
 <X1>           ::= "\"x1\":" <REAL_NUMBER>
 <Y1>           ::= "\"y1\":" <REAL_NUMBER>
 
-<UNSIGNED_INTEGER>     ::= (+")?        ("0" | [1-9] [0-9]*)
-<SIGNED_INTEGER>       ::= ("-" | "+")? ("0" | [1-9] [0-9]*)
+<UNSIGNED_INTEGER>     ::=        ("0" | [1-9] [0-9]*)
+<SIGNED_INTEGER>       ::= ("-")? ("0" | [1-9] [0-9]*)
 
 <REAL_NUMBER>          ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
 <POSITIVE_REAL_NUMBER> ::=     ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
