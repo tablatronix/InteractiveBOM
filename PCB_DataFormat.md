@@ -116,7 +116,7 @@ File specification is provided in eBPF form and validated using [BNF Playground]
 
 
 /*************** BOARD DATA ***************/
-<BOARD> ::= "\"board\":" "{" <PCB_SHAPE> "}"
+<BOARD>     ::= "\"board\":" "{" <PCB_SHAPE> "}"
 <PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "}"
 
 
@@ -127,20 +127,19 @@ File specification is provided in eBPF form and validated using [BNF Playground]
 /*************** COMMON RULES ***************/
 
 <BOUNDING_BOX> ::= "\"bounding_box\":" "{" <X0> "," <Y0> "," <X1> "," <Y1> "}"
-<X0> ::= "\"x0\":" <REAL_NUMBER>
-<Y0> ::= "\"y0\":" <REAL_NUMBER>
-<X1> ::= "\"x1\":" <REAL_NUMBER>
-<Y1> ::= "\"y1\":" <REAL_NUMBER>
+<X0>           ::= "\"x0\":" <REAL_NUMBER>
+<Y0>           ::= "\"y0\":" <REAL_NUMBER>
+<X1>           ::= "\"x1\":" <REAL_NUMBER>
+<Y1>           ::= "\"y1\":" <REAL_NUMBER>
+
+<UNSIGNED_INTEGER>     ::= (+")?        ("0" | [1-9] [0-9]*)
+<SIGNED_INTEGER>       ::= ("-" | "+")? ("0" | [1-9] [0-9]*)
+
+<REAL_NUMBER>          ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
+<POSITIVE_REAL_NUMBER> ::=     ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
+<NEGATIVE_REAL_NUMBER> ::= "-" (       [1-9] [0-9]*) ("." [0-9]+ )?
 
 
-
-<UNSIGNED_INTEGER>  ::= ("0" |  [1-9] [0-9]*)
-<REAL_NUMBER>     ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
-<NEGATIVE_REAL_NUMBER> ::= "-" ([1-9] [0-9]*) ("." [0-9]+ )
-<POSITIVE_REAL_NUMBER> ::= ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
-<LETTER> ::= [a-z] | [A-Z]
-<DIGIT>  ::= [0-9]
-<STRING>  ::= (<LETTER>) | (<LETTER> | <DIGIT> | "-" | "_")*
-<DATE_STRING> ::= (<LETTER>) | (<LETTER> | <DIGIT> | "-" | "_" | ":" | " ")*
-<SEPERATOR> ::= ("," | (" "* ","))
+<STRING>      ::= ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9] | "-" | "_")*
+<DATE_STRING> ::= ([a-z] | [A-Z] | [0-9] | "-" | "_" | ":" | " ")*
 ```
