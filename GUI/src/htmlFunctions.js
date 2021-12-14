@@ -181,6 +181,9 @@ load_pcb.onchange=function()
                         layerTable.clearLayerTable();
                         bomTable.clearBOMTable();
 
+                        render.ClearCanvas(globalData.GetAllCanvas().front);
+                        render.ClearCanvas(globalData.GetAllCanvas().back);
+
                     };
 
     reader.onerror = function errorHandler(evt) {
