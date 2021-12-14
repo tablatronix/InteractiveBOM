@@ -86,3 +86,61 @@ PAD_TYPE   := SMD | THT  <- SMD = surface mount, THT = Through hole
 ATTRIBUTE  ::= (<KEY>,<VALUE>)
 
 ```
+
+## File Specification
+
+File specification is provided in eBPF form and validated using [BNF Playground](https://bnfplayground.pauliankline.com/).
+
+```
+/* TOP LEVEL */
+<FILE>             ::= "{" <PCB_DATA> "}"
+
+<PCB_DATA>         ::= <METADATA> "," <BOARD> "," <PARTS>
+
+/*************** METADATA  ***************/
+<METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> <ECAD> <PROJECT_NAME> <DATE> <NUMBER_PARTS> "}"
+
+<PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER> ","
+
+<ECAD>             ::= "\"ecad\":" <ECAD_PROGRAM> ","
+<ECAD_PROGRAM>     ::= <EAGLE_CAD>
+<EAGLE_CAD>        ::= "\"EAGLE\"" | "\"eagle\"" | "\"Eagle\""
+
+<PROJECT_NAME>     ::= "\"project_name\"" ":" "\"" <STRING>  "\"" ","
+
+<DATE>             ::= "\"date\":" "\"" <DATE_STRING> "\"" ","
+
+<NUMBER_PARTS>     ::= "\"number_parts\":" "{" <PARTS_TOP> <PARTS_BOTTOM> "}"
+<PARTS_TOP>        ::= "\"top\":" <UNSIGNED_INTEGER> ","
+<PARTS_BOTTOM>     ::= "\"bottom\":" <UNSIGNED_INTEGER>
+
+
+/*************** BOARD DATA ***************/
+<BOARD> ::= "\"board\":" "{" <PCB_SHAPE> "}"
+<PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "}"
+
+
+/*************** PART DATA ***************/
+<PARTS> ::= "\"parts\":" "[" "]"
+
+
+/*************** COMMON RULES ***************/
+
+<BOUNDING_BOX> ::= "\"bounding_box\":" "{" <X0> "," <Y0> "," <X1> "," <Y1> "}"
+<X0> ::= "\"x0\":" <REAL_NUMBER>
+<Y0> ::= "\"y0\":" <REAL_NUMBER>
+<X1> ::= "\"x1\":" <REAL_NUMBER>
+<Y1> ::= "\"y1\":" <REAL_NUMBER>
+
+
+
+<UNSIGNED_INTEGER>  ::= ("0" |  [1-9] [0-9]*)
+<REAL_NUMBER>     ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
+<NEGATIVE_REAL_NUMBER> ::= "-" ([1-9] [0-9]*) ("." [0-9]+ )
+<POSITIVE_REAL_NUMBER> ::= ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
+<LETTER> ::= [a-z] | [A-Z]
+<DIGIT>  ::= [0-9]
+<STRING>  ::= (<LETTER>) | (<LETTER> | <DIGIT> | "-" | "_")*
+<DATE_STRING> ::= (<LETTER>) | (<LETTER> | <DIGIT> | "-" | "_" | ":" | " ")*
+<SEPERATOR> ::= ("," | (" "* ","))
+```
