@@ -224,20 +224,31 @@ function populateMetadata()
 {
     let metadata  = pcb.GetMetadata();
 
-    if(metadata.revision == "")
+    console.log(metadata.revision)
+    if((metadata.revision == undefined) || (metadata.revision == ""))
     {
-        document.getElementById("title").innerHTML    = "";
-        document.getElementById("revision").innerHTML = metadata.title;
+        document.getElementById("revision").innerHTML = "";
     }
     else
     {
-        document.getElementById("title").innerHTML    = metadata.title;
-        document.getElementById("revision").innerHTML = "Revision: " + metadata.revision;
+        document.getElementById("revision").innerHTML = "Revision: " + metadata.revision.toString();;
     }
 
-    document.getElementById("company").innerHTML  = metadata.company;
-    document.getElementById("filedate").innerHTML = metadata.date;
-    if (metadata.title != "")
+    if((metadata.company == undefined) || (metadata.company == ""))
+    {
+        document.getElementById("company").innerHTML = "";
+    }
+    else
+    {
+        document.getElementById("company").innerHTML  = metadata.company;
+    }
+
+
+    if((metadata.title == undefined) || (metadata.title == ""))
+    {
+        document.title = metadata.title + "";
+    }
+    else
     {
         document.title = metadata.title + " BOM";
     }

@@ -33,7 +33,7 @@ function recalcLayerScale(canvasdict, canvas)
     let width   = document.getElementById(layerID).clientWidth * 2;
     let height  = document.getElementById(layerID).clientHeight * 2;
     let bbox    = applyRotation(pcbdata.board.pcb_shape.bounding_box);
-    let scalefactor = 0.98 * Math.min( width / (bbox.maxx - bbox.minx), height / (bbox.maxy - bbox.miny));
+    let scalefactor = 0.98 * Math.min( width / (bbox.x1 - bbox.x0), height / (bbox.y1 - bbox.y0));
 
     if (scalefactor < 0.1)
     {
@@ -44,13 +44,13 @@ function recalcLayerScale(canvasdict, canvas)
 
     if ((canvasdict.layer != "B"))
     {
-        canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor + width) * 0.5;
+        canvasdict.transform.x = -((bbox.x1 + bbox.x0) * scalefactor + width) * 0.5;
     }
     else
     {
-        canvasdict.transform.x = -((bbox.maxx + bbox.minx) * scalefactor - width) * 0.5;
+        canvasdict.transform.x = -((bbox.x1 + bbox.x0) * scalefactor - width) * 0.5;
     }
-    canvasdict.transform.y = -((bbox.maxy + bbox.miny) * scalefactor - height) * 0.5;
+    canvasdict.transform.y = -((bbox.y1 + bbox.y0) * scalefactor - height) * 0.5;
 
     if(canvasdict.layer ==="F")
     {
@@ -71,17 +71,17 @@ function recalcLayerScale(canvasdict, canvas)
 function applyRotation(bbox) 
 {
     let corners = [
-        [bbox.minx, bbox.miny],
-        [bbox.minx, bbox.maxy],
-        [bbox.maxx, bbox.miny],
-        [bbox.maxx, bbox.maxy],
+        [bbox.x0, bbox.y0],
+        [bbox.x0, bbox.y1],
+        [bbox.x1, bbox.y0],
+        [bbox.x1, bbox.y1],
     ];
     corners = corners.map((v) => rotateVector(v, globalData.GetBoardRotation()));
     return {
-        minx: corners.reduce((a, v) => Math.min(a, v[0]), Infinity),
-        miny: corners.reduce((a, v) => Math.min(a, v[1]), Infinity),
-        maxx: corners.reduce((a, v) => Math.max(a, v[0]), -Infinity),
-        maxy: corners.reduce((a, v) => Math.max(a, v[1]), -Infinity),
+        x0: corners.reduce((a, v) => Math.min(a, v[0]), Infinity),
+        y0: corners.reduce((a, v) => Math.min(a, v[1]), Infinity),
+        x1: corners.reduce((a, v) => Math.max(a, v[0]), -Infinity),
+        y1: corners.reduce((a, v) => Math.max(a, v[1]), -Infinity),
     };
 }
 

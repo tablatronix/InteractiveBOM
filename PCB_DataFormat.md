@@ -6,27 +6,19 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
 /*************** TOP LEVEL ***************/
 
 
-/*
-    Define the top most level rule, <FILE>. File format is based upon JSON which requires
-    all data be placed between braces.
 
-*/
 <FILE>             ::= "{" <PCB_DATA> "}"
 
 
-/*
-    File is split into three sections:
-        1. Metadata
-        2. Board
-        3. Parts
-    See following sections for more information
-*/
 <PCB_DATA>         ::= <METADATA> "," <BOARD> "," <PARTS>
 
 /*************** METADATA SECTION ***************/
-<METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> "," <ECAD> "," <PROJECT_NAME> "," <DATE> "," <NUMBER_PARTS> "}"
+<METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> "," <ECAD> "," <COMPANY_NAME> "," <PROJECT_NAME> "," <PROJECT_REVISION> "," <DATE> "," <NUMBER_PARTS> "}"
 
 <PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER>
+
+<COMPANY_NAME>     ::= "\"revision\"" ":" "\"" <STRING> "\""
+<PROJECT_REVISION> ::= "\"company\""  ":" "\"" <STRING> "\""
 
 <ECAD>             ::= "\"ecad\":" <ECAD_PROGRAM>
 <ECAD_PROGRAM>     ::= <EAGLE_CAD>
@@ -122,7 +114,7 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
 
 <REAL_NUMBER>          ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
 <POSITIVE_REAL_NUMBER> ::=     ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
-<NEGATIVE_REAL_NUMBER> ::= "-" (       [1-9] [0-9]*) ("." [0-9]+ )?
+<NEGATIVE_REAL_NUMBER> ::= "-" ([1-9] [0-9]*) ("." [0-9]+ )? | "-" ("0" "." [0-9]+) 
 
 
 <STRING>      ::= ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9] | "-" | "_")*
