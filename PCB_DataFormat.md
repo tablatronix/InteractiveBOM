@@ -132,11 +132,33 @@ File specification is provided in eBPF form and validated using [BNF Playground]
 
 
 /*************** PARTS SECTION ***************/
-<PARTS> ::= "\"parts\":" "[" "]"
+<PARTS> ::= "\"parts\":" "[" <PARTS_ENTRY> "]"
+
+<PARTS_ENTRY> ::= <PART> | <PART> "," <PARTS_ENTRY>
+<PART>        ::= "{" <PART_NAME> "," <PART_VALUE> "," <PART_PACKAGE> "," <PART_ATTRIBUTE> "," <PART_LOCATION> "}"
+
+<PART_NAME>            ::= "\"name\":"  "\"" <STRING> "\""
+<PART_VALUE>           ::= "\"value\":" "\"" <STRING> "\""
+<PART_PACKAGE>         ::= "\"package\":" "{" <PACKAGE_PADS> "," <PACKAGE_BOUNDING_BOX> "}"
+<PART_ATTRIBUTE>       ::= "\"attributes\":" "[" <ATTRIBUTES> "]"
+<PART_LOCATION>        ::= "\"location\":" <LOCATION>
+
+<LOCATION>  ::= "\"F\"" | "\"B\""
+
+<ATTRIBUTES> ::= <ATTRIBUTE> | <ATTRIBUTE> "," <ATTRIBUTES>
+<ATTRIBUTE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"value\":" "\"" <STRING> "\"" "}"
 
 
+<PACKAGE_PADS>         ::= "\"pads\":" "[" <PADS> "]"
+<PACKAGE_BOUNDING_BOX> ::= <BOUNDING_BOX>
 
 
+<PADS> ::= <PAD> | <PAD> "," <PADS>
+<PAD>  ::= "{" "\"pad_type\":" <PAD_TYPE> "," "\"pin1\":" <PAD_PIN_ONE> "," "\"shape\":" <PAD_SHAPE> "," "\"angle\":" <REAL_NUMBER> "," "\"x\":" <REAL_NUMBER> "," "\"y\":" <REAL_NUMBER> "," "\"dx\":" <REAL_NUMBER> "," "\"dy\":" <REAL_NUMBER> "}"
+
+<PAD_TYPE>    ::= "\"smd\""  | "\"tht\""
+<PAD_PIN_ONE> ::= "\"yes\""  | "\"no\""
+<PAD_SHAPE>   ::= "\"rect\"" | "\"octagon\"" | "\"oblong\"" | "\"circle\""
 
 /*************** COMMON RULES ***************/
 
