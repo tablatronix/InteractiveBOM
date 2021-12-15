@@ -3,120 +3,120 @@
 File specification is provided in eBPF form and validated using [BNF Playground](https://bnfplayground.pauliankline.com/).
 Generated JSON is validated using [JSON Formatter & Validator](https://jsonformatter.curiousconcept.com/#)
 ```
-/*************** TOP LEVEL ***************/
+    /*************** TOP LEVEL ***************/
 
 
 
-<FILE>             ::= "{" <PCB_DATA> "}"
+    <FILE>             ::= "{" <PCB_DATA> "}"
 
 
-<PCB_DATA>         ::= <METADATA> "," <BOARD> "," <PARTS>
+    <PCB_DATA>         ::= <METADATA> "," <BOARD> "," <PARTS>
 
-/*************** METADATA SECTION ***************/
-<METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> "," <ECAD> "," <COMPANY_NAME> "," <PROJECT_NAME> "," <PROJECT_REVISION> "," <DATE> "," <NUMBER_PARTS> "}"
+    /*************** METADATA SECTION ***************/
+    <METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> "," <ECAD> "," <COMPANY_NAME> "," <PROJECT_NAME> "," <PROJECT_REVISION> "," <DATE> "," <NUMBER_PARTS> "}"
 
-<PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER>
+    <PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER>
 
-<COMPANY_NAME>     ::= "\"revision\"" ":" "\"" <STRING> "\""
-<PROJECT_REVISION> ::= "\"company\""  ":" "\"" <STRING> "\""
+    <COMPANY_NAME>     ::= "\"revision\"" ":" "\"" <STRING> "\""
+    <PROJECT_REVISION> ::= "\"company\""  ":" "\"" <STRING> "\""
 
-<ECAD>             ::= "\"ecad\":" <ECAD_PROGRAM>
-<ECAD_PROGRAM>     ::= <EAGLE_CAD>
-<EAGLE_CAD>        ::= "\"EAGLE\"" | "\"eagle\"" | "\"Eagle\""
+    <ECAD>             ::= "\"ecad\":" <ECAD_PROGRAM>
+    <ECAD_PROGRAM>     ::= <EAGLE_CAD>
+    <EAGLE_CAD>        ::= "\"EAGLE\"" | "\"eagle\"" | "\"Eagle\""
 
-<PROJECT_NAME>     ::= "\"project_name\"" ":" "\"" <STRING>  "\""
+    <PROJECT_NAME>     ::= "\"project_name\"" ":" "\"" <STRING>  "\""
 
-<DATE>             ::= "\"date\":" "\"" <DATE_STRING> "\""
+    <DATE>             ::= "\"date\":" "\"" <DATE_STRING> "\""
 
-<NUMBER_PARTS>     ::= "\"number_parts\":" "{" <PARTS_TOP> "," <PARTS_BOTTOM> "}"
-<PARTS_TOP>        ::= "\"top\":" <UNSIGNED_INTEGER>
-<PARTS_BOTTOM>     ::= "\"bottom\":" <UNSIGNED_INTEGER>
-
-
-/*************** BOARD SECTION ***************/
-<BOARD>         ::= "\"board\":" "{" <BOARD_SHAPE> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
-<BOARD_SHAPE>   ::= <PCB_SHAPE>
-<BOARD_TRACES>  ::= "\"traces\":" "[" <PCB_TRACES> "]"
-<BOARD_LAYERS>  ::= "\"layers\":" "[" <PCB_LAYERS> "]"
+    <NUMBER_PARTS>     ::= "\"number_parts\":" "{" <PARTS_TOP> "," <PARTS_BOTTOM> "}"
+    <PARTS_TOP>        ::= "\"top\":" <UNSIGNED_INTEGER>
+    <PARTS_BOTTOM>     ::= "\"bottom\":" <UNSIGNED_INTEGER>
 
 
-<PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "," <EDGES> "}"
-<EDGES>     ::= "\"edges\":" "[" <PATHS> "]"
-
-<PCB_TRACES> ::= <PCB_TRACE> | <PCB_TRACE> "," <PCB_TRACES>
-<PCB_TRACE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"segments\":" "[" <SEGMENT> "]" "}"
-
-<PCB_LAYERS> ::= <PCB_LAYER> | <PCB_LAYER> "," <PCB_LAYERS>
-<PCB_LAYER>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"layerNumber\":" <UNSIGNED_INTEGER> "," "\"paths\":" "[" <PATHS> "]" "}"
+    /*************** BOARD SECTION ***************/
+    <BOARD>         ::= "\"board\":" "{" <BOARD_SHAPE> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
+    <BOARD_SHAPE>   ::= <PCB_SHAPE>
+    <BOARD_TRACES>  ::= "\"traces\":" "[" <PCB_TRACES> "]"
+    <BOARD_LAYERS>  ::= "\"layers\":" "[" <PCB_LAYERS> "]"
 
 
-/*************** PARTS SECTION ***************/
-<PARTS> ::= "\"parts\":" "[" <PARTS_ENTRY> "]"
+    <PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "," <EDGES> "}"
+    <EDGES>     ::= "\"edges\":" "[" <PATHS> "]"
 
-<PARTS_ENTRY> ::= <PART> | <PART> "," <PARTS_ENTRY>
-<PART>        ::= "{" <PART_NAME> "," <PART_VALUE> "," <PART_PACKAGE> "," <PART_ATTRIBUTE> "," <PART_LOCATION> "}"
+    <PCB_TRACES> ::= <PCB_TRACE> | <PCB_TRACE> "," <PCB_TRACES>
+    <PCB_TRACE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"segments\":" "[" <SEGMENT> "]" "}"
 
-<PART_NAME>            ::= "\"name\":"  "\"" <STRING> "\""
-<PART_VALUE>           ::= "\"value\":" "\"" <STRING> "\""
-<PART_PACKAGE>         ::= "\"package\":" "{" <PACKAGE_PADS> "," <PACKAGE_BOUNDING_BOX> "}"
-<PART_ATTRIBUTE>       ::= "\"attributes\":" "[" <ATTRIBUTES> "]"
-<PART_LOCATION>        ::= "\"location\":" <LOCATION>
-
-<LOCATION>  ::= "\"F\"" | "\"B\""
-
-<ATTRIBUTES> ::= <ATTRIBUTE> | <ATTRIBUTE> "," <ATTRIBUTES>
-<ATTRIBUTE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"value\":" "\"" <STRING> "\"" "}"
+    <PCB_LAYERS> ::= <PCB_LAYER> | <PCB_LAYER> "," <PCB_LAYERS>
+    <PCB_LAYER>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"layerNumber\":" <UNSIGNED_INTEGER> "," "\"paths\":" "[" <PATHS> "]" "}"
 
 
-<PACKAGE_PADS>         ::= "\"pads\":" "[" <PADS> "]"
-<PACKAGE_BOUNDING_BOX> ::= <BOUNDING_BOX>
+    /*************** PARTS SECTION ***************/
+    <PARTS> ::= "\"parts\":" "[" <PARTS_ENTRY> "]"
+
+    <PARTS_ENTRY> ::= <PART> | <PART> "," <PARTS_ENTRY>
+    <PART>        ::= "{" <PART_NAME> "," <PART_VALUE> "," <PART_PACKAGE> "," <PART_ATTRIBUTE> "," <PART_LOCATION> "}"
+
+    <PART_NAME>            ::= "\"name\":"  "\"" <STRING> "\""
+    <PART_VALUE>           ::= "\"value\":" "\"" <STRING> "\""
+    <PART_PACKAGE>         ::= "\"package\":" "{" <PACKAGE_PADS> "," <PACKAGE_BOUNDING_BOX> "}"
+    <PART_ATTRIBUTE>       ::= "\"attributes\":" "[" <ATTRIBUTES> "]"
+    <PART_LOCATION>        ::= "\"location\":" <LOCATION>
+
+    <LOCATION>  ::= "\"F\"" | "\"B\""
+
+    <ATTRIBUTES> ::= <ATTRIBUTE> | <ATTRIBUTE> "," <ATTRIBUTES>
+    <ATTRIBUTE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"value\":" "\"" <STRING> "\"" "}"
 
 
-<PADS> ::= <PAD> | <PAD> "," <PADS>
-<PAD>  ::= "{" "\"pad_type\":" <PAD_TYPE> "," "\"pin1\":" <PAD_PIN_ONE> "," "\"shape\":" <PAD_SHAPE> "," "\"angle\":" <REAL_NUMBER> "," "\"x\":" <REAL_NUMBER> "," "\"y\":" <REAL_NUMBER> "," "\"dx\":" <REAL_NUMBER> "," "\"dy\":" <REAL_NUMBER> "}"
-
-<PAD_TYPE>    ::= "\"smd\""  | "\"tht\""
-<PAD_PIN_ONE> ::= "\"yes\""  | "\"no\""
-<PAD_SHAPE>   ::= "\"rect\"" | "\"octagon\"" | "\"oblong\"" | "\"circle\""
-
-/*************** COMMON RULES ***************/
-
-<SEGMENT>          ::= <PATHS> | <POLYGONS> | <VIAS>
-
-<PATHS>            ::= <PATH>    | <PATH>    "," <PATHS>
-<POLYGONS>         ::= <POLYGON> | <POLYGON> "," <POLYGONS>
-<VIAS>             ::= <VIA>     | <VIA>     "," <VIAS>
-
-<PATH>             ::= <LINE> | <ARC>
-<LINE>             ::= "{" "\"type\"" ":" "\"line\"" "," "\"x0\"" ":" <REAL_NUMBER> "," "\"y0\"" ":" <REAL_NUMBER> "," "\"x1\"" ":" <REAL_NUMBER> "," "\"y1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "}"
-<ARC>              ::= "{" "\"type\"" ":" "\"arc\"" "," "\"cx0\"" ":" <REAL_NUMBER> "," "\"cy0\"" ":" <REAL_NUMBER> "," "\"radius\"" ":" <REAL_NUMBER> "," "\"angle0\"" ":" <REAL_NUMBER> "," "\"angle1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "," "\"direction\"" ":" <ARC_DIRECTION> "}"
-<POLYGON>          ::= "{" "\"type\"" ":" "\"polygon\"" "," "\"positive\"" ":" <POLYGON_DIRECTION> "," "\"segments\"" ":" "[" <PATHS> "]" "}"
-<VIA>              ::= <VIA_ROUND> | <VIA_SQUARE> | <VIA_OCTOGON>
+    <PACKAGE_PADS>         ::= "\"pads\":" "[" <PADS> "]"
+    <PACKAGE_BOUNDING_BOX> ::= <BOUNDING_BOX>
 
 
-<ARC_DIRECTION>     ::= "\"clockwise\"" | "\"counterclockwise\""
-<POLYGON_DIRECTION> ::= "1" | "0"
+    <PADS> ::= <PAD> | <PAD> "," <PADS>
+    <PAD>  ::= "{" "\"pad_type\":" <PAD_TYPE> "," "\"pin1\":" <PAD_PIN_ONE> "," "\"shape\":" <PAD_SHAPE> "," "\"angle\":" <REAL_NUMBER> "," "\"x\":" <REAL_NUMBER> "," "\"y\":" <REAL_NUMBER> "," "\"dx\":" <REAL_NUMBER> "," "\"dy\":" <REAL_NUMBER> "}"
 
-<VIA_ROUND>    ::= "{" "\"type\"" ":" "\"via_round\""   "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
-<VIA_SQUARE>   ::= "{" "\"type\"" ":" "\"via_square\""  "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
-<VIA_OCTOGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <PAD_TYPE>    ::= "\"smd\""  | "\"tht\""
+    <PAD_PIN_ONE> ::= "\"yes\""  | "\"no\""
+    <PAD_SHAPE>   ::= "\"rect\"" | "\"octagon\"" | "\"oblong\"" | "\"circle\""
+
+    /*************** COMMON RULES ***************/
+
+    <SEGMENT>          ::= <PATHS> | <POLYGONS> | <VIAS>
+
+    <PATHS>            ::= <PATH>    | <PATH>    "," <PATHS>
+    <POLYGONS>         ::= <POLYGON> | <POLYGON> "," <POLYGONS>
+    <VIAS>             ::= <VIA>     | <VIA>     "," <VIAS>
+
+    <PATH>             ::= <LINE> | <ARC>
+    <LINE>             ::= "{" "\"type\"" ":" "\"line\"" "," "\"layer\":" <UNSIGNED_INTEGER> "," "\"x0\"" ":" <REAL_NUMBER> "," "\"y0\"" ":" <REAL_NUMBER> "," "\"x1\"" ":" <REAL_NUMBER> "," "\"y1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "}"
+    <ARC>              ::= "{" "\"type\"" ":" "\"arc\"" "," "\"layer\":" <UNSIGNED_INTEGER> "," "\"cx0\"" ":" <REAL_NUMBER> "," "\"cy0\"" ":" <REAL_NUMBER> "," "\"radius\"" ":" <REAL_NUMBER> "," "\"angle0\"" ":" <REAL_NUMBER> "," "\"angle1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "," "\"direction\"" ":" <ARC_DIRECTION> "}"
+    <POLYGON>          ::= "{" "\"type\"" ":" "\"polygon\"" "," "\"positive\"" ":" <POLYGON_DIRECTION> "," "\"segments\"" ":" "[" <PATHS> "]" "}"
+    <VIA>              ::= <VIA_ROUND> | <VIA_SQUARE> | <VIA_OCTOGON>
+
+
+    <ARC_DIRECTION>     ::= "\"clockwise\"" | "\"counterclockwise\""
+    <POLYGON_DIRECTION> ::= "1" | "0"
+
+    <VIA_ROUND>    ::= "{" "\"type\"" ":" "\"via_round\""   "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <VIA_SQUARE>   ::= "{" "\"type\"" ":" "\"via_square\""  "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <VIA_OCTOGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
 
 
 
-<BOUNDING_BOX> ::= "\"bounding_box\":" "{" <X0> "," <Y0> "," <X1> "," <Y1> "}"
-<X0>           ::= "\"x0\":" <REAL_NUMBER>
-<Y0>           ::= "\"y0\":" <REAL_NUMBER>
-<X1>           ::= "\"x1\":" <REAL_NUMBER>
-<Y1>           ::= "\"y1\":" <REAL_NUMBER>
+    <BOUNDING_BOX> ::= "\"bounding_box\":" "{" <X0> "," <Y0> "," <X1> "," <Y1> "}"
+    <X0>           ::= "\"x0\":" <REAL_NUMBER>
+    <Y0>           ::= "\"y0\":" <REAL_NUMBER>
+    <X1>           ::= "\"x1\":" <REAL_NUMBER>
+    <Y1>           ::= "\"y1\":" <REAL_NUMBER>
 
-<UNSIGNED_INTEGER>     ::=        ("0" | [1-9] [0-9]*)
-<SIGNED_INTEGER>       ::= ("-")? ("0" | [1-9] [0-9]*)
+    <UNSIGNED_INTEGER>     ::=        ("0" | [1-9] [0-9]*)
+    <SIGNED_INTEGER>       ::= ("-")? ("0" | [1-9] [0-9]*)
 
-<REAL_NUMBER>          ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
-<POSITIVE_REAL_NUMBER> ::=     ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
-<NEGATIVE_REAL_NUMBER> ::= "-" ([1-9] [0-9]*) ("." [0-9]+ )? | "-" ("0" "." [0-9]+) 
+    <REAL_NUMBER>          ::= <POSITIVE_REAL_NUMBER> | <NEGATIVE_REAL_NUMBER>
+    <POSITIVE_REAL_NUMBER> ::=     ("0" |  [1-9] [0-9]*) ("." [0-9]+ )?
+    <NEGATIVE_REAL_NUMBER> ::= "-" ([1-9] [0-9]*) ("." [0-9]+ )? | "-" ("0" "." [0-9]+) 
 
 
-<STRING>      ::= ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9] | "-" | "_")*
-<DATE_STRING> ::= ([a-z] | [A-Z] | [0-9] | "-" | "_" | ":" | " ")*
+    <STRING>      ::= ([a-z] | [A-Z]) ([a-z] | [A-Z] | [0-9] | "-" | "_" | "$")*
+    <DATE_STRING> ::= ([a-z] | [A-Z] | [0-9] | "-" | "_" | ":" | " ")*
 ```

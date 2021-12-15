@@ -80,19 +80,19 @@ function DrawTraces(isViewFront, scalefactor)
             if(segment.type == "line")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
-                render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layerNumber-1));
+                render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
             }
             else if(segment.type == "arc")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
-                render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layerNumber-1));
+                render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
             }
             else if (segment.type == "polygon")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
                 // Need to specify a color at full transparency so that a negative polygon 
                 // can be subtracted from a positive polygon.
-                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layerNumber-1) : "#000000FF";
+                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layer-1) : "#000000FF";
                 render_trace.Polygon(ctx, segment.segments, lineWidth, color, segment.positive === "1");
             }
             else if( segment.type == "via_round")
