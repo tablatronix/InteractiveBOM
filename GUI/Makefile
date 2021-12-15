@@ -18,7 +18,7 @@ clean:
 	  node_modules \
 	  pcbdata.json
 
-index.js: $(JS_DEPS)/.stamp $(JS_SRCS) pcbdata.json
+index.js: $(JS_DEPS)/.stamp $(JS_SRCS) pcbdata.json index.css
 	$(BROWSERIFY) ./src/ibom.js ./src/render.js ./src/htmlFunctions.js ./src/pcb.js ./src/colormap.js --debug --outfile $@
 
 pcbdata.json: ../Examples/Eagle/Simple_BRD/pcbdata.json
