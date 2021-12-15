@@ -50,19 +50,19 @@ function DrawPCBEdges(isViewFront, scalefactor)
 
     for (let edge of pcbdata.board.pcb_shape.edges) 
     {
-        if(edge.pathtype == "line")
+        if(edge.type == "line")
         {
             let lineWidth = Math.max(1 / scalefactor, edge.width);
             render_boardedge.Line(ctx, edge, lineWidth, color);
         }
-        else if(edge.pathtype == "arc")
+        else if(edge.type == "arc")
         {
             let lineWidth = Math.max(1 / scalefactor, edge.width);
             render_boardedge.Arc(ctx, edge, lineWidth, color);
         }
         else
         {
-            console.log("unsupported board edge segment type", edge.pathtype);
+            console.log("unsupported board edge segment type", edge.type);
         }
     }
 }
@@ -77,17 +77,17 @@ function DrawTraces(isViewFront, scalefactor)
         {
             let ctx = pcb.GetLayerCanvas(segment.layer, isViewFront).getContext("2d")
 
-            if(segment.pathtype == "line")
+            if(segment.type == "line")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
                 render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layerNumber-1));
             }
-            else if(segment.pathtype == "arc")
+            else if(segment.type == "arc")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
                 render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layerNumber-1));
             }
-            else if (segment.pathtype == "polygon")
+            else if (segment.type == "polygon")
             {
                 let lineWidth = Math.max(1 / scalefactor, segment.width);
                 // Need to specify a color at full transparency so that a negative polygon 
@@ -95,7 +95,7 @@ function DrawTraces(isViewFront, scalefactor)
                 let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layerNumber-1) : "#000000FF";
                 render_trace.Polygon(ctx, segment.segments, lineWidth, color, segment.positive === "1");
             }
-            else if( segment.pathtype == "via_round")
+            else if( segment.type == "via_round")
             {
                 let centerPoint = new Point(segment.x, segment.y);
                 render_via.Round(
@@ -107,7 +107,7 @@ function DrawTraces(isViewFront, scalefactor)
                     , colorMap.GetDrillColor()
                 );
             }
-            else if( segment.pathtype == "via_octagon")
+            else if( segment.type == "via_octagon")
             {
                 let centerPoint = new Point(segment.x, segment.y);
                 render_via.Octagon(
@@ -119,7 +119,7 @@ function DrawTraces(isViewFront, scalefactor)
                     , colorMap.GetDrillColor()
                 );
             }
-            else if( segment.pathtype == "via_square")
+            else if( segment.type == "via_square")
             {
                 let centerPoint = new Point(segment.x, segment.y);
                 render_via.Square(
@@ -158,24 +158,24 @@ function DrawSilkscreen(isViewFront, scalefactor)
         
         for (let path of layer.paths)
         {
-            if(path.pathtype == "line")
+            if(path.type == "line")
             {
                 let lineWidth = Math.max(1 / scalefactor, path.width);
                 render_silkscreen.Line(ctx, path, lineWidth, color);
             }
-            else if(path.pathtype == "arc")
+            else if(path.type == "arc")
             {
                 let lineWidth = Math.max(1 / scalefactor, path.width);
                 render_silkscreen.Arc(ctx, path, lineWidth, color);
             }
-            else if(path.pathtype == "circle")
+            else if(path.type == "circle")
             {
                 let lineWidth = Math.max(1 / scalefactor, path.width);
                 render_silkscreen.Circle(ctx, path, lineWidth, color);
             }
             else
             {
-                console.log("unsupported silkscreen path segment type", path.pathtype);
+                console.log("unsupported silkscreen path segment type", path.type);
             }
         }
     }
