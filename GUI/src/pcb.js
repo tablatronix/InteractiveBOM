@@ -7,6 +7,7 @@
 "use strict";
 var Part     = require("./Part.js");
 var Metadata = require("./Metadata.js").Metadata;
+var PCB_Layer = require("./PCB_Layer.js").PCB_Layer;
 
 /***************************************************************************************************
                                          PCB Part Interfaces
@@ -294,6 +295,7 @@ function CreateLayers(pcbdataStructure)
             }
         }
     }
+
 
     // Extract layers form the layers section
     for(let layer of pcbdataStructure.board.layers)
