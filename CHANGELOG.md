@@ -1,7 +1,17 @@
 # Changelog
 
+## Version 2.1
+### Added
+- Added user ability to load new pcbdata.json file at runtime.
+- Formalized pcbdata.json file using eBNF.
 
-## Version 2.0-RC2
+### Changed
+- All references to iBOM now changed to iPCB. 
+- 
+### Removed
+
+
+## Version 2.0
 ### Added
 - Integrated make based build
 ## Changed

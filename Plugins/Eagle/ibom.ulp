@@ -6,7 +6,7 @@
            "Implements a generator that extracts needed data from a board file \n"
            "and creates the JavaScript JSON variable that is needed for interactive BOM \n"
            "to function\n\n"
-           "Usage: RUN ibom.ulp\n"
+           "Usage: RUN ipcb.ulp\n"
            "Author: Sean Alling"
 /**************************************************************************************************/
 
@@ -336,7 +336,7 @@ void PrintPads(UL_ELEMENT E)
 DESCRIPTION: Scans a string and replaces douple quotes (") with a space character. This is needed
              so that the resulting JSON file is valid. Without this check the resulting JSON
              could include double quotes embedded in a  part and the resulting JSON is invalid
-             which will make iBOM not work. 
+             which will make iPCB not work. 
 */
 string removeDoubleQuote(string passedString)
 {
