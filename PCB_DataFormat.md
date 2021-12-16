@@ -4,11 +4,7 @@ File specification is provided in eBPF form and validated using [BNF Playground]
 Generated JSON is validated using [JSON Formatter & Validator](https://jsonformatter.curiousconcept.com/#)
 ```
     /*************** TOP LEVEL ***************/
-
-
-
     <FILE>             ::= "{" <PCB_DATA> "}"
-
 
     <PCB_DATA>         ::= <METADATA> "," <BOARD> "," <PARTS>
 
@@ -34,14 +30,10 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
 
 
     /*************** BOARD SECTION ***************/
-    <BOARD>         ::= "\"board\":" "{" <BOARD_SHAPE> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
-    <BOARD_SHAPE>   ::= <PCB_SHAPE>
+    <BOARD>         ::= "\"board\":" "{" <BOUNDING_BOX> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
+    <BOARD_SHAPE>   ::= <BOUNDING_BOX>
     <BOARD_TRACES>  ::= "\"traces\":" "[" <PCB_TRACES> "]"
     <BOARD_LAYERS>  ::= "\"layers\":" "[" <PCB_LAYERS> "]"
-
-
-    <PCB_SHAPE> ::= "\"pcb_shape\":" "{" <BOUNDING_BOX> "," <EDGES> "}"
-    <EDGES>     ::= "\"edges\":" "[" <PATHS> "]"
 
     <PCB_TRACES> ::= <PCB_TRACE> | <PCB_TRACE> "," <PCB_TRACES>
     <PCB_TRACE>  ::= "{" "\"name\":" "\"" <STRING> "\"" "," "\"segments\":" "[" <SEGMENT> "]" "}"
