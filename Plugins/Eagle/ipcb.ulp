@@ -139,7 +139,7 @@ void PrintPathType_Arc(int layer, real x0, real y0, real radius, real angle0, re
 /*
     This really just generates test stings that will be displayed
 */
-void PrintLayer(int layerNumber, string layerName, string location)
+void PrintLayer(int layerNumber, string layerName)
 {
     board(B)
     {
@@ -149,7 +149,7 @@ void PrintLayer(int layerNumber, string layerName, string location)
 
         tabcount++;
         PrintTabs();
-        printf("\"name\":\"%s\", \"layerNumber\" : \"%d\",\"location\":\"%s\", \"paths\": [\n",layerName, layerNumber, location);
+        printf("\"name\":\"%s\", \"layerNumber\" : \"%d\", \"paths\": [\n",layerName, layerNumber);
         tabcount++;
         B.texts(T)
         {
@@ -198,7 +198,7 @@ void GenerateSilkscreen( void )
             {
                 if(L.used)
                 {
-                    PrintLayer(L.number, L.name, "F");
+                    PrintLayer(L.number, L.name);
                 }
             }
         }
