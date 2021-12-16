@@ -110,7 +110,7 @@ function GetBOMCombinedValues(bomtableTemp)
             }
             else
             {
-                result.push(CopyPart(bomtableTemp[n]));
+                result.push(bomtableTemp[n].CopyPart());
                 count++;
             }
         }
