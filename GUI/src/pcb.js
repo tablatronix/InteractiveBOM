@@ -289,7 +289,6 @@ function CreateLayers(pcbdataStructure)
     }
 
     // XXX: Need another way to extract all layers from input
-    Layers.push(new PCBLayer("edges"));
     Layers.push(new PCBLayer("pads"));
     Layers.push(new PCBLayer("highlights"));
 }

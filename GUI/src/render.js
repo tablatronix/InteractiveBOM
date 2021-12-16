@@ -43,30 +43,6 @@ function DrawPad(ctx, pad, color)
     }
 }
 
-function DrawPCBEdges(isViewFront, scalefactor) 
-{
-    let ctx = pcb.GetLayerCanvas("edges", isViewFront).getContext("2d");
-    let color = colorMap.GetPCBEdgeColor();
-
-    for (let edge of pcbdata.board.pcb_shape.edges) 
-    {
-        if(edge.type == "line")
-        {
-            let lineWidth = Math.max(1 / scalefactor, edge.width);
-            render_boardedge.Line(ctx, edge, lineWidth, color);
-        }
-        else if(edge.type == "arc")
-        {
-            let lineWidth = Math.max(1 / scalefactor, edge.width);
-            render_boardedge.Arc(ctx, edge, lineWidth, color);
-        }
-        else
-        {
-            console.log("unsupported board edge segment type", edge.type);
-        }
-    }
-}
-
 function DrawTraces(isViewFront, scalefactor)
 {
     // Iterate over all traces in the design
@@ -251,7 +227,6 @@ function drawCanvas(canvasdict)
 {
     render_canvas.RedrawCanvas(canvasdict);
     let isViewFront = (canvasdict.layer === "F");
-    DrawPCBEdges  (isViewFront, canvasdict.transform.s);
     DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
     DrawTraces    (isViewFront, canvasdict.transform.s);
     // Draw last so that text is not erased when drawing polygons.

@@ -1,3 +1,11 @@
+/*
+    Layer table forms the right half of display. The table contains each of the 
+    used layers in the design along with check boxes to show/hide the layer.
+
+    The following function interfaces the layers for the project to the GUI.
+*/
+"use strict";
+
 var pcb        = require("./pcb.js");
 var globalData = require("./global.js");
 
@@ -6,7 +14,6 @@ function populateLayerTable()
     populateLayerHeader();
     populateLayerBody();
 }
-
 
 function setFilterLayer(input) 
 {
@@ -22,7 +29,7 @@ function getFilterLayer()
 
 function populateLayerHeader()
 {
-    layerHead = document.getElementById("layerhead");
+    let layerHead = document.getElementById("layerhead");
     while (layerHead.firstChild) 
     {
         layerHead.removeChild(layerHead.firstChild);
@@ -65,7 +72,7 @@ function populateLayerHeader()
 
 function populateLayerBody() 
 {
-    layerBody = document.getElementById("layerbody");
+    let layerBody = document.getElementById("layerbody");
     while (layerBody.firstChild) 
     {
         layerBody.removeChild(layerBody.firstChild);
