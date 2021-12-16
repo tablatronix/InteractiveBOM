@@ -692,8 +692,8 @@ void PrintPartData()
             numeric string attributeValue;
             E.attributes(A)
             {
-                attributeName += A.name + ";";
-                attributeValue += A.value + ";";
+                attributeName += removeDoubleQuote(A.name) + ";";
+                attributeValue += removeDoubleQuote(A.value) + ";";
             }
             
             // This removes the trailing ;
