@@ -8,6 +8,7 @@ var pcb        = require("./pcb.js");
 var handlers_mouse    = require("./handlers_mouse.js");
 var layerTable        = require("./layer_table.js")
 var bomTable          = require("./bom_table.js")
+var Metadata = require("./Metadata.js").Metadata;
 
 //TODO: GLOBAL VARIABLES
 let layerBody = undefined;
@@ -222,10 +223,10 @@ function changeCanvasLayout(layout)
 
 function populateMetadata()
 {
-    let metadata  = pcb.GetMetadata();
+    let metadata = Metadata.GetInstance();
+    metadata.Set(pcbdata.metadata);
 
-    console.log(metadata.revision)
-    if((metadata.revision == undefined) || (metadata.revision == ""))
+    if(metadata.revision == undefined)
     {
         document.getElementById("revision").innerHTML = "";
     }
@@ -234,7 +235,7 @@ function populateMetadata()
         document.getElementById("revision").innerHTML = "Revision: " + metadata.revision.toString();;
     }
 
-    if((metadata.company == undefined) || (metadata.company == ""))
+    if(metadata.company == undefined)
     {
         document.getElementById("company").innerHTML = "";
     }
@@ -243,14 +244,23 @@ function populateMetadata()
         document.getElementById("company").innerHTML  = metadata.company;
     }
 
-
-    if((metadata.title == undefined) || (metadata.title == ""))
+    if(metadata.project_name == undefined)
     {
-        document.title = metadata.title + "";
+         document.getElementById("title").innerHTML = "";
     }
     else
     {
-        document.title = metadata.title + " BOM";
+         document.getElementById("title").innerHTML = metadata.project_name;
+    }
+
+    console.log(metadata)
+    if(metadata.date == undefined)
+    {
+         document.getElementById("filedate").innerHTML = "";
+    }
+    else
+    {
+         document.getElementById("filedate").innerHTML = metadata.date;
     }
 }
 

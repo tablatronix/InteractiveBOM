@@ -6,7 +6,7 @@
 
 "use strict";
 var Part     = require("./Part.js");
-var Metadata = require("./Metadata.js");
+var Metadata = require("./Metadata.js").Metadata;
 
 /***************************************************************************************************
                                          PCB Part Interfaces
@@ -134,26 +134,6 @@ function getAttributeValue(part, attributeToLookup)
     // Check that the attribute exists by looking up its name. If it exists
     // the return the value for the attribute, otherwise return an empty string. 
     return result;
-}
-
-
-/***************************************************************************************************
-                                         PCB Metadata Interfaces
-***************************************************************************************************/
-let metadata;
-
-function CreateMetadata(pcbdataStructure)
-{
-    metadata = new Metadata(   pcbdataStructure.metadata.title
-                             , pcbdataStructure.metadata.revision
-                             , pcbdataStructure.metadata.company
-                             , pcbdataStructure.metadata.date
-    );
-}
-
-function GetMetadata()
-{
-    return metadata;
 }
 
 /***************************************************************************************************
@@ -358,11 +338,14 @@ function IsLayerVisible(layerName, isFront)
 function OpenPcbData(pcbdata)
 {
     CreateBOM(pcbdata);
-    CreateMetadata(pcbdata);
+
+    let metadata = Metadata.GetInstance();
+    metadata.Set(pcbdata.metadata);
+
     CreateLayers(pcbdata);
 }
 
 module.exports = {
-    OpenPcbData, GetBOM, getAttributeValue, GetBOMCombinedValues, filterBOMTable, GetMetadata, 
+    OpenPcbData, GetBOM, getAttributeValue, GetBOMCombinedValues, filterBOMTable,
     GetLayers, IsLayerVisible, SetLayerVisibility, GetLayerCanvas
 };
