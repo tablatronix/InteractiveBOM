@@ -5,45 +5,17 @@
 */
 
 "use strict";
+var Part     = require("./Part.js");
+var Metadata = require("./Metadata.js");
 
 /***************************************************************************************************
                                          PCB Part Interfaces
 **************************************************************************************************/
-// Read the ecad property. This property lets the application know what 
-// ecad software generated the json file. 
-function GetCADType(pcbdataStructure)
-{
-    if(pcbdataStructure.hasOwnProperty("ecad"))
-    {
-        return pcbdataStructure.ecad;
-    }
-}
-
 // This will hold the part objects. There is one entry per part
 // Format of a part is as follows
 // [VALUE,PACKAGE,REFRENECE DESIGNATOR, ,LOCATION, ATTRIBUTE],
 // where ATTRIBUTE is a dict of ATTRIBUTE NAME : ATTRIBUTE VALUE
 let BOM = [];
-
-// Constructor for creating a part.
-function Part(value, footprint, reference, location, attributes, checkboxes)
-{
-    this.quantity   = 1;
-    this.value      = value;
-    this.foorptint  = footprint;
-    this.reference  = reference;
-    this.location   = location;
-    this.attributes = attributes;
-    this.checkboxes = checkboxes;
-}
-
-function CopyPart(inputPart)
-{
-    // XXX: This is not performing a deep copy, attributes is a map and this is being copied by 
-    //      reference which is not quite what we want here. It should be a deep copy so once called
-    //      this will result in a completely new object that will not reference one another
-    return new Part(inputPart.value, inputPart.package, inputPart.reference, inputPart.location, inputPart.attributes, inputPart.checkboxes);
-}
 
 //TODO: There should be steps here for validating the data and putting it into a 
 //      format that is valid for our application
@@ -74,7 +46,7 @@ function CreateBOM(pcbdataStructure)
             attributes.set(attributeNames[i].toLowerCase(),attributeValues[i].toLowerCase());
         }
         // Add the par to the global part array
-        BOM.push(new Part(value, footprint, reference, location, attributes, checkboxes));
+        BOM.push(new Part.Part(value, footprint, reference, location, attributes, checkboxes));
     }
 }
 
@@ -99,7 +71,7 @@ function filterBOMTable(bomtable, filterFunction)
             // If the filter returns false -> do not remove part, it does not need to be filtered
             if(!filterFunction(bomtable[i]))
             {
-                result.push(CopyPart(bomtable[i]));
+                result.push(bomtable[i].CopyPart());
             }
         }
     }
@@ -169,20 +141,13 @@ function getAttributeValue(part, attributeToLookup)
                                          PCB Metadata Interfaces
 ***************************************************************************************************/
 let metadata;
-// Constructor for creating a part.
-function Metadata(title, revision, company, date) 
-{
-    this.title    = title;
-    this.revision = revision;
-    this.company  = company;
-    this.date     = date;
-}
 
 function CreateMetadata(pcbdataStructure)
 {
-    metadata = new Metadata( 
-        pcbdataStructure.metadata.title, pcbdataStructure.metadata.revision,
-        pcbdataStructure.metadata.company, pcbdataStructure.metadata.date
+    metadata = new Metadata(   pcbdataStructure.metadata.title
+                             , pcbdataStructure.metadata.revision
+                             , pcbdataStructure.metadata.company
+                             , pcbdataStructure.metadata.date
     );
 }
 
@@ -205,13 +170,13 @@ function GetLayers()
 
 function PCBLayer(name)
 {
-    this.name    = name;
+    this.name          = name;
     this.visible_front = true;
-    this.visible_back = true;
+    this.visible_back  = true;
 
 
     this.front_id = "layer_front_" + name;
-    this.back_id  = "layer_rear_" + name;
+    this.back_id  = "layer_rear_"  + name;
 
     let canvas_front = document.getElementById("front-canvas-list");
     let layer_front = document.createElement("canvas");
@@ -399,5 +364,5 @@ function OpenPcbData(pcbdata)
 
 module.exports = {
     OpenPcbData, GetBOM, getAttributeValue, GetBOMCombinedValues, filterBOMTable, GetMetadata, 
-    GetLayers, IsLayerVisible, SetLayerVisibility, GetLayerCanvas, GetCADType
+    GetLayers, IsLayerVisible, SetLayerVisibility, GetLayerCanvas
 };
