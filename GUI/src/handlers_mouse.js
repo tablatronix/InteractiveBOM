@@ -170,6 +170,7 @@ function handleMouseWheel(e, layerdict)
     t.panx += 2 * e.offsetX * zoomd;
     t.pany += 2 * e.offsetY * zoomd;
     render.drawCanvas(layerdict);
+    render.drawHighlights();
 }
 
 function addMouseHandlers(div, layerdict) 
