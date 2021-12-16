@@ -50,7 +50,7 @@ const combineValues = document.getElementById("combineValues");
 combineValues.onchange=function()
 {
     globalData.setCombineValues(combineValues.checked);
-    ipcb.populateBomTable();
+    bomTable.populateBomTable();
 };
 
 
@@ -58,7 +58,7 @@ const hidePlacedParts = document.getElementById("hidePlacedParts");
 hidePlacedParts.onchange=function()
 {
     globalData.setHidePlacedParts(hidePlacedParts.checked);
-    ipcb.populateBomTable();
+    bomTable.populateBomTable();
 };
 
 const debugModeBox = document.getElementById("debugMode");

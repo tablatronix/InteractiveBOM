@@ -253,7 +253,6 @@ function populateMetadata()
          document.getElementById("title").innerHTML = metadata.project_name;
     }
 
-    console.log(metadata)
     if(metadata.date == undefined)
     {
          document.getElementById("filedate").innerHTML = "";
