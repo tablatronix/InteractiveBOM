@@ -210,12 +210,13 @@ function populateBomBody()
 
         bom.appendChild(tr);
         let handler = createRowHighlightHandler(tr.id, references);
-        tr.onmousemove = handler;
-        globalData.pushHighlightHandlers({
-            id: tr.id,
-            handler: handler,
-            refs: references
-        });
+        
+         tr.onclick = handler;
+         globalData.pushHighlightHandlers({
+             id: tr.id,
+             handler: handler,
+             refs: references
+         });
 
         if (getFilterBOM() && first)
         {
