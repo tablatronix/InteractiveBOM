@@ -20,6 +20,7 @@ var traceColorMap =
     ["#006699C8" , "#006699C8"],
     ["#3232C8B4" , "#3232C8B4"],
 ];
+var traceColor_Default     = ["#878787", "#878787"]   ;
 //                         Light Mode, Dark Mode
 var padColor_Default     = ["#878787", "#878787"]   ;
 var padColor_Pin1        = ["#ffb629", "#ffb629"]   ;
@@ -53,7 +54,17 @@ function GetColorPalette()
 
 function GetTraceColor(traceLayer)
 {
-    return traceColorMap[traceLayer][GetColorPalette()];
+    console.log(traceLayer, typeof traceLayer !== 'number')
+    if (isNaN(traceLayer) || (typeof traceLayer !== 'number') || (traceLayer >= traceColorMap.length))
+    {
+        console.log("WARNING: Invalid trace layer number, using default.");
+        return traceColor_Default;
+    }
+    else
+    {
+        return traceColorMap[traceLayer][GetColorPalette()];
+    }
+    
 }
 
 
