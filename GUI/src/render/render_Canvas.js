@@ -32,7 +32,7 @@ function recalcLayerScale(canvasdict, canvas)
     let layerID = (canvasdict.layer === "F") ? "frontcanvas" : "backcanvas" ;
     let width   = document.getElementById(layerID).clientWidth * 2;
     let height  = document.getElementById(layerID).clientHeight * 2;
-    let bbox    = applyRotation(pcbdata.board.pcb_shape.bounding_box);
+    let bbox    = applyRotation(pcbdata.board.bounding_box);
     let scalefactor = 0.98 * Math.min( width / (bbox.x1 - bbox.x0), height / (bbox.y1 - bbox.y0));
 
     if (scalefactor < 0.1)

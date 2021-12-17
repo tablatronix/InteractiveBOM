@@ -30,7 +30,7 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
 
 
     /*************** BOARD SECTION ***************/
-    <BOARD>         ::= "\"board\":" "{" <BOUNDING_BOX> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
+    <BOARD>         ::= "\"board\":" "{" <BOARD_SHAPE> "," <BOARD_TRACES>  "," <BOARD_LAYERS> "}"
     <BOARD_SHAPE>   ::= <BOUNDING_BOX>
     <BOARD_TRACES>  ::= "\"traces\":" "[" <PCB_TRACES> "]"
     <BOARD_LAYERS>  ::= "\"layers\":" "[" <PCB_LAYERS> "]"

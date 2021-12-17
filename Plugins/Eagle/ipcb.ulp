@@ -94,28 +94,25 @@ void PrintSignalType_PolyArc( real x0, real y0, real radius, real angle0, real a
 }
 
 
-void PrintSignalVia_Round(real x, real y, real diameter, real drill)
+void PrintSignalVia_Round(int layer,real x, real y, real diameter, real drill)
 {
-    PrintTabs();
-    printf( "{\"layer\" : \"Vias\", \"pathtype\" : \"via_round\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
-            x, y, diameter, drill
+    printf( "{\"type\":\"via_round\",\"layer\":%d,\"x\":%5.5f,\"y\":%5.5f,\"diameter\":%5.5f,\"drill\":%5.5f}",
+            layer, x, y, diameter, drill
           );
 }
 
-void PrintSignalVia_Octagon(real x, real y, real diameter, real drill)
+void PrintSignalVia_Octagon(int layer,real x, real y, real diameter, real drill)
 {
-    PrintTabs();
-    printf( "{\"layer\" : \"Vias\", \"pathtype\" : \"via_octagon\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
-            x, y, diameter, drill
+    printf( "{\"type\":\"via_octagon\",\"layer\":%d,\"x\":%5.5f,\"y\":%5.5f,\"diameter\":%5.5f,\"drill\":%5.5f}",
+            layer, x, y, diameter, drill
           );
 }
 
 
-void PrintSignalVia_Square(real x, real y, real diameter, real drill)
+void PrintSignalVia_Square(int layer, real x, real y, real diameter, real drill)
 {
-    PrintTabs();
-    printf( "{\"layer\" : \"Vias\", \"pathtype\" : \"via_square\", \"x\": %5.5f, \"y\": %5.5f, \"diameter\": %5.5f, \"drill\": %5.5f},\n",
-            x, y, diameter, drill
+    printf( "{\"type\":\"via_square\",\"layer\":%d,\"x\":%5.5f,\"y\":%5.5f,\"diameter\":%5.5f,\"drill\":%5.5f}",
+            layer, x, y, diameter, drill
           );
 }
 
@@ -151,13 +148,19 @@ void PrintLayer(int layerNumber, string layerName)
         PrintTabs();
         printf("\"name\":\"%s\", \"layerNumber\" : \"%d\", \"paths\": [\n",layerName, layerNumber);
         tabcount++;
+        int once = 0;
         B.texts(T)
         {
             if(T.layer == layerNumber)
             {
+
                 T.wires(W)
                 {
-                    if(W.arc) 
+                    if(once == 1)
+                    {
+                        printf(",");
+                    }
+                    if(W.arc)
                     {
                         PrintPathType_Arc(layerNumber, u2mm(W.arc.xc), u2mm(W.arc.yc),  u2mm(W.arc.radius),  W.arc.angle1,  W.arc.angle2,  u2mm(W.width));
                     }
@@ -165,18 +168,36 @@ void PrintLayer(int layerNumber, string layerName)
                     {
                         PrintPathType_Line(layerNumber, u2mm(W.x1),  u2mm(W.y1),  u2mm(W.x2),  u2mm(W.y2),  u2mm(W.width));
                     }
+                    once = 1;
                 }
+
             }
         }
 
+        B.wires(W)
+        {
+            if(W.layer == layerNumber)
+            {
+                if(once == 1)
+                {
+                    printf(",");
+                }
+                if(W.arc)
+                {
+                    // According to eagle documentation, output is always clockwise.
+                    PrintPathType_Arc(W.layer , u2mm(W.arc.xc), u2mm(W.arc.yc),  u2mm(W.arc.radius),  W.arc.angle1,  W.arc.angle2,  u2mm(W.width));
+                }
+                else
+                {
+                    PrintPathType_Line(W.layer , u2mm(W.x1),  u2mm(W.y1),  u2mm(W.x2),  u2mm(W.y2),  u2mm(W.width));
+                }
+                once = 1;
+            }
+        }
 
-        tabcount--;
-        PrintTabs();
-        tabcount--;
         printf("],\n");
 
         PrintTabs();
-        tabcount--;
         printf("},\n");
     }
 }
@@ -211,7 +232,6 @@ void GenerateSilkscreen( void )
         
         //PrintLayer(LAYER_TVALUES, "tvalues", "F");
         //PrintLayer(LAYER_BVALUES, "bvalues", "B");
-
 
         //PrintLayer(LAYER_TDOCU, "tdocu", "F");
         //PrintLayer(LAYER_BDOCU, "bdocu", "B");
@@ -382,7 +402,6 @@ string GetProjectName(string pcbFileName)
 void GeneratePCBBoundingBox( void )
 {
     board(B) {
-        PrintTabs();
         // Print the edge_box segment to the output file
         printf("\"bounding_box\":{");
         /*
@@ -403,15 +422,12 @@ void PrintPackageBoundingBox(UL_ELEMENT E)
 {
      PrintTabs();
     // Print the edge_box segment to the output file
-    printf("\"bounding_box\":{\n");
-    tabcount++;
-    PrintKeyValue_KeyReal("x0", u2mm(E.package.area.x1));
-    PrintKeyValue_KeyReal("y0", u2mm(E.package.area.y1));
-    PrintKeyValue_KeyReal("x1", u2mm(E.package.area.x2));
-    PrintKeyValue_KeyReal("y1", u2mm(E.package.area.y2));
-    tabcount--;
-    PrintTabs();
-    printf("},\n");
+    printf("\"bounding_box\":{");
+    printf("\"x0\":%5.5f,", u2mm(E.package.area.x1));
+    printf("\"y0\":%5.5f,", u2mm(E.package.area.y1));
+    printf("\"x1\":%5.5f,", u2mm(E.package.area.x2));
+    printf("\"y1\":%5.5f" , u2mm(E.package.area.y2));
+    printf("},");
 }
 
 void GeneratePCBEdges( void )
@@ -463,10 +479,7 @@ void GeneratePCBShape( void )
 {
     board(B) {
         // Print to the file the start of the edges section. This will be an array of wire segments
-        printf("\"pcb_shape\":{");
         GeneratePCBBoundingBox();
-        GeneratePCBEdges();
-        printf("},");
         printf("\n");
     }
 }
@@ -505,60 +518,65 @@ void PrintTraces(void)
 
             S.vias(V)
             {
+                if(once_wire == 1)
+                {
+                    printf(",");
+                }
                 if(V.shape[LAYER_TOP] ==  VIA_SHAPE_SQUARE)
                 {
-                    PrintSignalVia_Square(u2mm(V.x), u2mm(V.y), u2mm(V.diameter[LAYER_TOP]), u2mm(V.drill));
+                    PrintSignalVia_Square(LAYER_VIAS,u2mm(V.x), u2mm(V.y), u2mm(V.diameter[LAYER_TOP]), u2mm(V.drill));
                 }
                 else if(V.shape[LAYER_TOP] ==  VIA_SHAPE_ROUND)
                 {
-                    PrintSignalVia_Round(u2mm(V.x), u2mm(V.y), u2mm(V.diameter[LAYER_TOP]), u2mm(V.drill));
+                    PrintSignalVia_Round(LAYER_VIAS,u2mm(V.x), u2mm(V.y), u2mm(V.diameter[LAYER_TOP]), u2mm(V.drill));
                 }
                 // must be octagon
                 else
                 {
-                    PrintSignalVia_Octagon(u2mm(V.x), u2mm(V.y), u2mm(V.diameter[LAYER_TOP]), u2mm(V.drill));
+                    PrintSignalVia_Octagon(LAYER_VIAS,u2mm(V.x), u2mm(V.y), u2mm(V.diameter[LAYER_TOP]), u2mm(V.drill));
                 }
+                once_wire = 1;
             }
-            S.polygons(P)
-            {
-                int x0;
-                int y0;
-                int first = 1;
-                int isPositive = 1;
-                // Using contour loop variable to get the eagle calculate boundaries for the polygon.
-                P.contours(C)
-                {
-                    if (first)
-                    {
-                        // a new partial polygon is starting
-                        x0 = C.x1;
-                        y0 = C.y1;
-                        printf("{\"layer\":\"%s\",\"layerNumber\":\"%d\",\"pathtype\":\"polygon\",\"positive\":\"%d\",\"segments\":[",layerNames[P.layer], P.layer, isPositive);
-                    }
-
-                    if(C.arc)
-                    {
-                        // According to eagle documentation, output is always clockwise. 
-                        PrintSignalType_PolyArc(u2mm(C.arc.xc), u2mm(C.arc.yc),  u2mm(C.arc.radius), C.arc.angle1,  C.arc.angle2,  u2mm(C.width));
-                    }
-                    else
-                    {
-                        PrintSignalType_PolyLine(u2mm(C.x1), u2mm(C.y1), u2mm(C.x2), u2mm(C.y2), u2mm(C.width));
-                    }
-
-                    if (first)
-                    {
-                        first = 0;
-                    }
-                    else if (C.x2 == x0 && C.y2 == y0)
-                    {
-                        printf("]");
-                        printf("}");
-                        first = 1;
-                        isPositive = 0;
-                    }
-                }
-            }
+//            S.polygons(P)
+//            {
+//                int x0;
+//                int y0;
+//                int first = 1;
+//                int isPositive = 1;
+//                // Using contour loop variable to get the eagle calculate boundaries for the polygon.
+//                P.contours(C)
+//                {
+//                    if (first)
+//                    {
+//                        // a new partial polygon is starting
+//                        x0 = C.x1;
+//                        y0 = C.y1;
+//                        printf("{\"layer\":\"%s\",\"layerNumber\":\"%d\",\"pathtype\":\"polygon\",\"positive\":\"%d\",\"segments\":[",layerNames[P.layer], P.layer, isPositive);
+//                    }
+//
+//                    if(C.arc)
+//                    {
+//                        // According to eagle documentation, output is always clockwise. 
+//                        PrintSignalType_PolyArc(u2mm(C.arc.xc), u2mm(C.arc.yc),  u2mm(C.arc.radius), C.arc.angle1,  C.arc.angle2,  u2mm(C.width));
+//                    }
+//                    else
+//                    {
+//                        PrintSignalType_PolyLine(u2mm(C.x1), u2mm(C.y1), u2mm(C.x2), u2mm(C.y2), u2mm(C.width));
+//                    }
+//
+//                    if (first)
+//                    {
+//                        first = 0;
+//                    }
+//                    else if (C.x2 == x0 && C.y2 == y0)
+//                    {
+//                        printf("]");
+//                        printf("}");
+//                        first = 1;
+//                        isPositive = 0;
+//                    }
+//                }
+//            }
             printf("]");
             printf("}");
             once_signal = 1;
@@ -756,7 +774,7 @@ void GenerateParts( void )
     PrintTabs();
     printf("\"parts\":[\n");
     tabcount++;
-    PrintPartData();
+    //PrintPartData();
     tabcount--;
     PrintTabs();
     tabcount--;
