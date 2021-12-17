@@ -260,10 +260,45 @@ canvas:active {
   visibility: hidden;
 }
 
-.bom .bom-checkbox:hover:before, .bom .bom-checkbox:hover:after {
-  visibility: visible;
-  transition: visibility 0.2s linear 1s;
+/**** LAYER CHECK BOXES ****/
+.check_box_bom input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+  display: inline-block;
 }
+
+/* Create a custom checkbox */
+.checkmark {
+
+  height: 22px;
+  width: 22px;
+  background:url('./images/layer_off.svg') no-repeat;
+
+  background-size: 22px;
+  display: inline-block;
+  text-align: center;
+}
+
+/* When the checkbox is checked, add a blue background */
+.check_box_bom input:checked ~ .checkmark {
+  background:url('././images/layer_on.svg') no-repeat;
+  text-align: center;
+  background-size: 22px;
+  display: inline-block;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.checkmark:after {
+  content: "";
+  display: inline-block;
+}
+
+
+/***************************/
+
 
 .split {
   -webkit-box-sizing: border-box;

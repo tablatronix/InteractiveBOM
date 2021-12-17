@@ -91,12 +91,22 @@ function populateLayerBody()
             }
         }
 
+        var newlabelF = document.createElement("Label");
+        var newlabelR = document.createElement("Label");
+        
         let tr = document.createElement("TR");
         let td = document.createElement("TD");
         let input_front = document.createElement("input");
         let input_back = document.createElement("input");
+        
         input_front.type = "checkbox";
         input_back.type = "checkbox";
+        newlabelF.classList.add("check_box_bom")
+        newlabelR.classList.add("check_box_bom")
+
+
+
+
         // Assumes that all layers are visible by default.
         if (    (globalData.readStorage( "checkbox_layer_front_" + i.name + "_visible" ) == "true")
              || (globalData.readStorage( "checkbox_layer_front_" + i.name + "_visible" ) == null)
@@ -128,18 +138,31 @@ function populateLayerBody()
         
         input_front.onchange = createLayerCheckboxChangeHandler(i, true);
         input_back.onchange  = createLayerCheckboxChangeHandler(i, false);
-        td.appendChild(input_front);
+
+        //newlabelF.innerHTML = input_front;
+        //newlabelR.innerHTML = input_back;
+        var spanF = document.createElement("Span");
+        var spanR = document.createElement("Span");
+        spanF.classList.add("checkmark")
+        spanR.classList.add("checkmark")
+
+        newlabelF.appendChild(input_front);
+        newlabelR.appendChild(input_back);
+        newlabelF.appendChild(spanF);
+        newlabelR.appendChild(spanR);
+
+        td.appendChild(newlabelF);
         tr.appendChild(td);
 
         td = document.createElement("TD");
-        td.appendChild(input_back);
+        td.appendChild(newlabelR);
         tr.appendChild(td);
 
         // Layer
         td = document.createElement("TD");
         td.innerHTML =highlightFilterLayer(i.name);
         tr.appendChild(td);
-        
+
         layerbody.appendChild(tr);
     }
 }
