@@ -83,6 +83,81 @@ function clearBOMTable()
         bom.removeChild(bom.firstChild);
     }
 }
+/*
+    https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort
+
+    JS treats values in compare as strings by default
+    so need to use a function to sort numerically.
+*/
+function NumericCompare(a,b)
+{
+    return (a - b);
+}
+
+/*
+    Takes as an argument a list of reference designations.
+*/
+function ConvertReferenceDesignatorsToRanges(ReferenceDesignations)
+{
+    /*
+        Extract reference designation from the list. 
+        It is assumed the reference designation is  teh same across all 
+        in the input list. 
+
+        In addition also extract the numeric value in a separate list. 
+    */
+    let numbers    = ReferenceDesignations.map(x => parseInt(x.split(/(\d+$)/)[1],10));
+    // Only extract reference designation from first element as all others are assumed to be equal.
+    let designator = ReferenceDesignations[0].split(/(\d+$)/)[0];
+
+    /*
+        Sort all numbers to be increasing
+    */
+    numbers.sort(NumericCompare);
+
+    /*
+        Following code was adapted from KiCost project. Code ported to JavaScript from Python.
+        Removed a check for sub parts as iPCB deals with parts from a PCB perspective and not 
+        schematic perspective, this do not need sub part checking.
+    */
+
+    // No ranges found yet since we just started.
+    let rangedReferenceDesignations = [];
+    // First possible range is at the start of the list of numbers.
+    let rangeStart = 0;
+
+    // Go through list of numbers looking for 3 or more sequential numbers.
+    while(rangeStart < numbers.length)
+    {
+        // Current range starts off as a single number.
+        let numRange = numbers[rangeStart]
+        // The next possible start of a range.
+        let nextRangeStart = rangeStart + 1;
+
+        // Look for sequences of three or more sequential numbers.
+        for(let rangeEnd = (rangeStart+2); rangeEnd < numbers.length; rangeEnd++)
+        {
+            if(rangeEnd - rangeStart != numbers[rangeEnd] - numbers[rangeStart])
+            {
+                // Non-sequential numbers found, so break out of loop.
+                break;
+            }
+            else
+            {
+                // Otherwise, extend the current range.
+                numRange = String(numbers[rangeStart]) + "-" + String(numbers[rangeEnd])
+                // 3 or more sequential numbers found, so next possible range must start after this one.
+                nextRangeStart = rangeEnd + 1
+            }
+        }
+        // Append the range (or single number) just found to the list of range.
+        rangedReferenceDesignations.push(designator + numRange)
+        // Point to the start of the next possible range and keep looking.
+        rangeStart = nextRangeStart
+    }
+    return rangedReferenceDesignations
+}
+
 
 function populateBomBody()
 {
@@ -106,7 +181,7 @@ function populateBomBody()
     for (let i in bomtable)
     {
         let bomentry = bomtable[i];
-        let references = bomentry.reference;
+        let references = ConvertReferenceDesignatorsToRanges(bomentry.reference.split(',')).join(',');
 
         // remove entries that do not match filter
         if (getFilterBOM() != "")

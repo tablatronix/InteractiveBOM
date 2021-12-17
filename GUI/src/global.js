@@ -60,9 +60,41 @@ function writeStorage(key, value)
 *************************************************/
 let highlightedRefs = [];
 
-function setHighlightedRefs(refs)
+
+
+function ConvertRangesToReferenceDesignators(text)
 {
-    highlightedRefs = refs.split(",");
+    // Split ignoring the spaces.
+    let partial_ref = text.split(',')
+    let refs = []
+    
+    for(let ref of partial_ref)
+    {
+        if(ref.match('-'))
+        {
+            let designator_name  = ref.match(/^\D+/)[0];
+            let startNumber      = ref.match(/(\d+)-(\d+)/)[1];
+            let endNumber        = ref.match(/(\d+)-(\d+)/)[2];
+
+            for(let i = startNumber; i <= endNumber; i++)
+            {
+                refs.push(designator_name + String(i));
+            }
+        }
+        else
+        {
+            refs.push(ref);
+        }
+    }
+   return refs
+}
+
+function setHighlightedRefs(refs)
+{       
+        //console.log(refs)
+        //console.log(ConvertRangesToReferenceDesignators(refs))
+        highlightedRefs = ConvertRangesToReferenceDesignators(refs);
+        //console.log(highlightedRefs)
 }
 
 function getHighlightedRefs()

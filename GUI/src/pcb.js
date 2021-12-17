@@ -83,22 +83,7 @@ function filterBOMTable(bomtable, filterFunction)
     return result;
 }
 
-function GetCombinedReferenceStringByValue(partReferences)
-{
-    let refString = "";
-    for(let ref of partReferences.split(','))
-    {
-        /*
-            Filter used here to remove "" which show up sometimes. 
 
-            (\d+$) will partition a string into two parts, first the reference designation 
-            followed by the numeric value. The regex itself will split based upon the 
-            digits that are at the end of a string. This allows strings that have reference 
-            designation in the middle to not incorrectly split.
-        */
-        console.log(ref.split(/(\d+$)/).filter(item => item))
-    }
-}
 
 // Takes a bom table and combines entries that are the same
 function GetBOMCombinedValues(bomtableTemp)
@@ -128,7 +113,6 @@ function GetBOMCombinedValues(bomtableTemp)
             }
             else
             {
-                GetCombinedReferenceStringByValue(result[count].reference)
                 result.push(bomtableTemp[n].CopyPart());
                 count++;
             }

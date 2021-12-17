@@ -54,7 +54,6 @@ function GetColorPalette()
 
 function GetTraceColor(traceLayer)
 {
-    console.log(traceLayer, typeof traceLayer !== 'number')
     if (isNaN(traceLayer) || (typeof traceLayer !== 'number') || (traceLayer >= traceColorMap.length))
     {
         console.log("WARNING: Invalid trace layer number, using default.");
