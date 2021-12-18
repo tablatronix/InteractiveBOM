@@ -82,8 +82,8 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
     <PATH>             ::= <LINE> | <ARC>
     <LINE>             ::= "{" "\"type\"" ":" "\"line\"" "," "\"layer\":" <UNSIGNED_INTEGER> "," "\"x0\"" ":" <REAL_NUMBER> "," "\"y0\"" ":" <REAL_NUMBER> "," "\"x1\"" ":" <REAL_NUMBER> "," "\"y1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "}"
     <ARC>              ::= "{" "\"type\"" ":" "\"arc\"" "," "\"layer\":" <UNSIGNED_INTEGER> "," "\"cx0\"" ":" <REAL_NUMBER> "," "\"cy0\"" ":" <REAL_NUMBER> "," "\"radius\"" ":" <REAL_NUMBER> "," "\"angle0\"" ":" <REAL_NUMBER> "," "\"angle1\"" ":" <REAL_NUMBER> "," "\"width\"" ":" <REAL_NUMBER> "," "\"direction\"" ":" <ARC_DIRECTION> "}"
-    <POLYGON>          ::= "{" "\"type\"" ":" "\"polygon\"" "," "\"positive\"" ":" <POLYGON_DIRECTION> "," "\"segments\"" ":" "[" <PATHS> "]" "}"
-    <VIA>              ::= <VIA_ROUND> | <VIA_SQUARE> | <VIA_OCTOGON>
+    <POLYGON>          ::= "{" "\"type\"" ":" "\"polygon\"" "," "\"layer\":" <UNSIGNED_INTEGER> "," "\"positive\"" ":" <POLYGON_DIRECTION> "," "\"segments\"" ":" "[" <PATHS> "]" "}"
+    <VIA>              ::= <VIA_ROUND> | <VIA_SQUARE> | <VIA_OCTAGON>
 
 
     <ARC_DIRECTION>     ::= "\"clockwise\"" | "\"counterclockwise\""
@@ -91,7 +91,7 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
 
     <VIA_ROUND>    ::= "{" "\"type\"" ":" "\"via_round\""   "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
     <VIA_SQUARE>   ::= "{" "\"type\"" ":" "\"via_square\""  "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
-    <VIA_OCTOGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <VIA_OCTAGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
 
 
 

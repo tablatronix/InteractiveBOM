@@ -284,7 +284,7 @@ canvas:active {
 
 /* When the checkbox is checked, add a blue background */
 .check_box_bom input:checked ~ .checkmark {
-  background:url('././images/layer_on.svg') no-repeat;
+  background:url('./images/layer_on.svg') no-repeat;
   text-align: center;
   background-size: 22px;
   display: inline-block;

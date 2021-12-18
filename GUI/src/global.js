@@ -1,5 +1,9 @@
 "use strict";
 
+
+
+let pcb_traces = [];
+
 /*************************************************
               Board Rotation                    
 *************************************************/
@@ -516,6 +520,7 @@ function GetBoardRotation()
 
 
 module.exports = {
+    pcb_traces,
     initStorage                , readStorage                , writeStorage          ,
     setHighlightedRefs         , getHighlightedRefs         ,
     setRedrawOnDrag            , getRedrawOnDrag            ,

@@ -10,6 +10,8 @@ var layerTable        = require("./layer_table.js")
 var bomTable          = require("./bom_table.js")
 var Metadata = require("./Metadata.js").Metadata;
 
+var PCB_Trace = require("./PCB/PCB_Trace.js").PCB_Trace;
+
 //TODO: GLOBAL VARIABLES
 let layerBody = undefined;
 let layerHead = undefined;
@@ -17,6 +19,7 @@ let bomhead   = undefined;
 let topmostdiv = undefined;
 let bom = undefined;
 let bomtable = undefined;
+
 
 
 
@@ -572,6 +575,13 @@ window.onload = function(e)
     console.time("on load");
     // This function makes so that the user data for the pcb is converted to our internal structure
     pcb.OpenPcbData(pcbdata)
+
+
+    for(let trace of pcbdata.board.traces)
+    {
+        globalData.pcb_traces.push(new PCB_Trace(trace))
+    }
+    console.log(globalData.pcb_traces)
 
     // Create canvas layers. One canvas per pcb layer
 
