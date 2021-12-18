@@ -11,10 +11,12 @@ class Segment_Via_Octagon extends Segment
     constructor(iPCB_JSON_Segment)
     {
         super(iPCB_JSON_Segment);
+
         this.centerPoint   = new Point(iPCB_JSON_Segment.x, iPCB_JSON_Segment.y);
         this.diameter      = iPCB_JSON_Segment.diameter;
         this.drillDiameter = iPCB_JSON_Segment.drill;
         this.verticies     = GetPolygonVerticies(iPCB_JSON_Segment.diameter/2, 8);
+        this.layer       = iPCB_JSON_Segment.layer;
     }
 
     Render(guiContext, scalefactor)

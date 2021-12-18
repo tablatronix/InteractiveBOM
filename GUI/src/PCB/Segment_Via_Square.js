@@ -13,8 +13,9 @@ class Segment_Via_Square extends Segment
         super(iPCB_JSON_Segment);
         this.centerPoint    = new Point(iPCB_JSON_Segment.x, iPCB_JSON_Segment.y);
         this.diameter       = iPCB_JSON_Segment.diameter;
-        this.drillDriameter = iPCB_JSON_Segment.drill;
+        this.drillDiameter  = iPCB_JSON_Segment.drill;
         this.verticies      = GetPolygonVerticies(iPCB_JSON_Segment.diameter/2, 4);
+        this.layer       = iPCB_JSON_Segment.layer;
     }
 
     Render(guiContext, scalefactor)

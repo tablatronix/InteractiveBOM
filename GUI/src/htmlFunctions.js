@@ -177,7 +177,7 @@ load_pcb.onchange=function()
     // Handle errors load
     reader.onload = function loadHandler(event) {
                         pcbdata = JSON.parse(event.target.result);
-                        console.log(pcbdata);
+                        //console.log(pcbdata);
                         layerTable.clearLayerTable();
                         bomTable.clearBOMTable();
 

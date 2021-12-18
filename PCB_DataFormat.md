@@ -89,9 +89,9 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
     <ARC_DIRECTION>     ::= "\"clockwise\"" | "\"counterclockwise\""
     <POLYGON_DIRECTION> ::= "1" | "0"
 
-    <VIA_ROUND>    ::= "{" "\"type\"" ":" "\"via_round\""   "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
-    <VIA_SQUARE>   ::= "{" "\"type\"" ":" "\"via_square\""  "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
-    <VIA_OCTAGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <VIA_ROUND>    ::= "{" "\"type\"" ":" "\"via_round\""   "," \"layer\":" <UNSIGNED_INTEGER> "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <VIA_SQUARE>   ::= "{" "\"type\"" ":" "\"via_square\""  "," \"layer\":" <UNSIGNED_INTEGER> "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
+    <VIA_OCTAGON>  ::= "{" "\"type\"" ":" "\"via_octagon\"" "," \"layer\":" <UNSIGNED_INTEGER> "," "\"x\"" ":" <REAL_NUMBER> "," "\"y\"" ":" <REAL_NUMBER> "," "\"diameter\"" ":" <REAL_NUMBER> "," "\"drill\"" ":" <REAL_NUMBER> "}"
 
 
 

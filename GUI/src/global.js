@@ -94,11 +94,8 @@ function ConvertRangesToReferenceDesignators(text)
 }
 
 function setHighlightedRefs(refs)
-{       
-        //console.log(refs)
-        //console.log(ConvertRangesToReferenceDesignators(refs))
-        highlightedRefs = ConvertRangesToReferenceDesignators(refs);
-        //console.log(highlightedRefs)
+{
+    highlightedRefs = ConvertRangesToReferenceDesignators(refs);
 }
 
 function getHighlightedRefs()

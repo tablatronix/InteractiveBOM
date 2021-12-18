@@ -11,18 +11,23 @@ class Segment_Polygon extends Segment
     constructor(iPCB_JSON_Polygon)
     {
         super(iPCB_JSON_Polygon);
-        this.segments = [];
+        this.points = [];
         this.positive = iPCB_JSON_Polygon.positive;
-
+        
         for(let segment of iPCB_JSON_Polygon.segments)
         {
             if(segment.type == "arc")
             {
-                this.segments.push(new Segment_Arc(segment));
+                
             }
             else if(segment.type == "line")
             {
-                this.segments.push(new Segment_Line(segment));
+                /*
+                    Following only works for eagle as polygons are composed solely of 
+                    lines. If this is not true then the verticies array must be modified.
+                */
+                let point1 = (segment.x0, segment.x1);
+                this.vertices.push(point1);
             }
             else
             {
@@ -35,7 +40,18 @@ class Segment_Polygon extends Segment
     {
         guiContext.save();
 
+        let compositionType = (this.positive) ? "source-over" : "destination-out";
+        let renderOptions = {
+            color: colorMap.GetTraceColor(this.layer-1),
+            fill: true,
+            compositionType: compositionType
+        };
 
+        render_lowlevel.IrregularPolygon(
+            guiContext,
+            this.vertices,
+            renderOptions
+        );
         guiContext.restore();
     }
 }

@@ -4,8 +4,6 @@
 
 var globalData         = require("./global.js");
 var render_pads        = require("./render/render_pad.js");
-var render_via         = require("./render/render_via.js");
-var render_trace       = require("./render/render_trace.js");
 var render_boardedge   = require("./render/render_boardedge.js");
 var render_silkscreen  = require("./render/render_silkscreen.js");
 var render_canvas      = require("./render/render_Canvas.js");
@@ -45,76 +43,7 @@ function DrawPad(ctx, pad, color)
 
 function DrawTraces(isViewFront, scalefactor)
 {
-   
-//    // Iterate over all traces in the design
-//    for (let trace of pcbdata.board.traces)
-//    {
-//        // iterate over all segments in a trace 
-//        for (let segment of trace.segments)
-//        {
-//            let ctx = pcb.GetLayerCanvas(segment.layer, isViewFront).getContext("2d")
-//
-//            if(segment.type == "line")
-//            {
-//                let lineWidth = Math.max(1 / scalefactor, segment.width);
-//                render_trace.Line(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
-//            }
-//            else if(segment.type == "arc")
-//            {
-//                let lineWidth = Math.max(1 / scalefactor, segment.width);
-//                render_trace.Arc(ctx, segment, lineWidth, colorMap.GetTraceColor(segment.layer-1));
-//            }
-//            else if (segment.type == "polygon")
-//            {
-//                let lineWidth = Math.max(1 / scalefactor, segment.width);
-//                // Need to specify a color at full transparency so that a negative polygon 
-//                // can be subtracted from a positive polygon.
-//                let color = (segment.positive == 1) ? colorMap.GetTraceColor(segment.layer-1) : "#000000FF";
-//                render_trace.Polygon(ctx, segment.segments, lineWidth, color, segment.positive === "1");
-//            }
-//            else if( segment.type == "via_round")
-//            {
-//                let centerPoint = new Point(segment.x, segment.y);
-//                render_via.Round(
-//                    ctx
-//                    , centerPoint
-//                    , segment.diameter
-//                    , segment.drill
-//                    , colorMap.GetViaColor()
-//                    , colorMap.GetDrillColor()
-//                );
-//            }
-//            else if( segment.type == "via_octagon")
-//            {
-//                let centerPoint = new Point(segment.x, segment.y);
-//                render_via.Octagon(
-//                    ctx
-//                    , centerPoint
-//                    , segment.diameter
-//                    , segment.drill
-//                    , colorMap.GetViaColor()
-//                    , colorMap.GetDrillColor()
-//                );
-//            }
-//            else if( segment.type == "via_square")
-//            {
-//                let centerPoint = new Point(segment.x, segment.y);
-//                render_via.Square(
-//                    ctx
-//                    , centerPoint
-//                    , segment.diameter
-//                    , segment.drill
-//                    , colorMap.GetViaColor()
-//                    , colorMap.GetDrillColor()
-//                );
-//            }
-//            else
-//            {
-//                console.log("unsupported trace segment type");
-//            }
-//        }
-//    }
-
+    console.log("HERE")
     for (let trace of globalData.pcb_traces)
     {
         trace.Render(isViewFront, scalefactor);
@@ -232,6 +161,7 @@ function DrawModules(isViewFront, layer, scalefactor, highlightedRefs)
 
 function drawCanvas(canvasdict)
 {
+    console.log("Here")
     render_canvas.RedrawCanvas(canvasdict);
     let isViewFront = (canvasdict.layer === "F");
     DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
