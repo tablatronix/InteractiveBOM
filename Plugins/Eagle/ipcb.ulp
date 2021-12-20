@@ -146,7 +146,7 @@ void PrintLayer(int layerNumber, string layerName)
 
         tabcount++;
         PrintTabs();
-        printf("\"name\":\"%s\", \"layerNumber\" : \"%d\", \"paths\": [\n",layerName, layerNumber);
+        printf("\"name\":\"%s\",\"layerNumber\":%d,\"paths\":[\n",layerName, layerNumber);
         tabcount++;
         int once = 0;
         B.texts(T)

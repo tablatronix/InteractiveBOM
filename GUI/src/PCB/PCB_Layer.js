@@ -9,11 +9,6 @@ class PCB_Layer
         this.layerNumber = iPCB_JSON_Layer.layerNumber;
         this.paths       = [];
     }
-
-    AddPath(path)
-    {
-        this.paths.push(path)
-    }
 }
 
 module.exports = {

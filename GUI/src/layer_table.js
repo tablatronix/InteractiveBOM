@@ -80,12 +80,11 @@ function populateLayerBody()
     let layertable =  pcb.GetLayers();
 
     // remove entries that do not match filter
-    for (let i of layertable) 
+    for (let layer of globalData.pcb_layers) 
     {
-
         if (getFilterLayer() != "")
         {
-            if(!entryMatchesLayer(i))
+            if(!entryMatchesLayer(layer))
             {
                 continue;
             }
@@ -108,36 +107,36 @@ function populateLayerBody()
 
 
         // Assumes that all layers are visible by default.
-        if (    (globalData.readStorage( "checkbox_layer_front_" + i.name + "_visible" ) == "true")
-             || (globalData.readStorage( "checkbox_layer_front_" + i.name + "_visible" ) == null)
+        if (    (globalData.readStorage( "checkbox_layer_front_" + layer.name + "_visible" ) == "true")
+             || (globalData.readStorage( "checkbox_layer_front_" + layer.name + "_visible" ) == null)
         )
         {
-            pcb.SetLayerVisibility(i.name, true, true);
+            pcb.SetLayerVisibility(layer.name, true, true);
             input_front.checked = true;
         }
         else
         {
-            pcb.SetLayerVisibility(i.name, true, false);
+            pcb.SetLayerVisibility(layer.name, true, false);
             input_front.checked = false;
         }
 
 
-        if (    (globalData.readStorage( "checkbox_layer_back_" + i.name + "_visible" ) == "true")
-             || (globalData.readStorage( "checkbox_layer_back_" + i.name + "_visible" ) == null)
+        if (    (globalData.readStorage( "checkbox_layer_back_" + layer.name + "_visible" ) == "true")
+             || (globalData.readStorage( "checkbox_layer_back_" + layer.name + "_visible" ) == null)
         )
         {
-            pcb.SetLayerVisibility(i.name, false, true);
+            pcb.SetLayerVisibility(layer.name, false, true);
             input_back.checked = true;
         }
         else
         {
-            pcb.SetLayerVisibility(i.name, false, false);
+            pcb.SetLayerVisibility(layer.name, false, false);
             input_back.checked = false;
         }
 
         
-        input_front.onchange = createLayerCheckboxChangeHandler(i, true);
-        input_back.onchange  = createLayerCheckboxChangeHandler(i, false);
+        input_front.onchange = createLayerCheckboxChangeHandler(layer, true);
+        input_back.onchange  = createLayerCheckboxChangeHandler(layer, false);
 
         //newlabelF.innerHTML = input_front;
         //newlabelR.innerHTML = input_back;
@@ -160,7 +159,7 @@ function populateLayerBody()
 
         // Layer
         td = document.createElement("TD");
-        td.innerHTML =highlightFilterLayer(i.name);
+        td.innerHTML =highlightFilterLayer(layer.name);
         tr.appendChild(td);
 
         layerbody.appendChild(tr);

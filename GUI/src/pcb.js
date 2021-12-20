@@ -150,7 +150,6 @@ function GetLayers()
     return Layers;
 }
 
-
 function PCBLayer(name)
 {
     this.name          = name;
@@ -161,13 +160,13 @@ function PCBLayer(name)
     this.front_id = "layer_front_" + name;
     this.back_id  = "layer_rear_"  + name;
 
-    let canvas_front = document.getElementById("front-canvas-list");
-    let layer_front = document.createElement("canvas");
-    layer_front.id = this.front_id;
-    layer_front.style.zIndex = layer_Zindex;
+    let canvas_front           = document.getElementById("front-canvas-list");
+    let layer_front            = document.createElement("canvas");
+    layer_front.id             = this.front_id;
+    layer_front.style.zIndex   = layer_Zindex;
     layer_front.style.position = "absolute";
-    layer_front.style.left = 0;
-    layer_front.style.top = 0;
+    layer_front.style.left     = 0;
+    layer_front.style.top      = 0;
     canvas_front.appendChild(layer_front);
 
 

@@ -582,6 +582,13 @@ window.onload = function(e)
         globalData.pcb_traces.push(new PCB_Trace(trace))
     }
 
+    for(let layer of pcbdata.board.layers)
+    {
+        globalData.pcb_layers.push(layer);
+    }
+
+    console.log(globalData.pcb_layers);
+
     // Create canvas layers. One canvas per pcb layer
 
     globalData.initStorage();

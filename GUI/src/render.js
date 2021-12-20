@@ -43,12 +43,10 @@ function DrawPad(ctx, pad, color)
 
 function DrawTraces(isViewFront, scalefactor)
 {
-    console.log("HERE")
     for (let trace of globalData.pcb_traces)
     {
         trace.Render(isViewFront, scalefactor);
     }
-
 }
 
 function DrawSilkscreen(isViewFront, scalefactor)
@@ -161,7 +159,6 @@ function DrawModules(isViewFront, layer, scalefactor, highlightedRefs)
 
 function drawCanvas(canvasdict)
 {
-    console.log("Here")
     render_canvas.RedrawCanvas(canvasdict);
     let isViewFront = (canvasdict.layer === "F");
     DrawModules   (isViewFront, canvasdict.layer, canvasdict.transform.s, []);
