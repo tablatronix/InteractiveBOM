@@ -279,7 +279,6 @@ function CreateLayers(pcbdataStructure)
         }
     }
 
-
     // Extract layers form the layers section
     for(let layer of pcbdataStructure.board.layers)
     {
@@ -292,8 +291,8 @@ function CreateLayers(pcbdataStructure)
     }
 
     // XXX: Need another way to extract all layers from input
-    Layers.push(new PCBLayer("pads"));
-    Layers.push(new PCBLayer("highlights"));
+    //Layers.push(new PCBLayer("pads"));
+    //Layers.push(new PCBLayer("highlights"));
 }
 
 

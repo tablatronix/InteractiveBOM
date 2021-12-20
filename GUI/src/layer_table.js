@@ -3,11 +3,26 @@
     used layers in the design along with check boxes to show/hide the layer.
 
     The following function interfaces the layers for the project to the GUI.
+
+
+    Layer table is composed of three parts:
+        1. Search bar
+        2. Header
+        3. Layers
+
+    Search bar allows users to type a word and layer names matching what 
+    has been typed will remain while all other entries will be hidden.
+
+    Header simply displays column names for each each column.
+
+    Last layer ,body, displays an entry per used layer that are not
+    filtered out.
 */
 "use strict";
 
 var pcb        = require("./pcb.js");
 var globalData = require("./global.js");
+var Table_LayerEntry = require("./render/Table_LayerEntry.js").Table_LayerEntry
 
 function populateLayerTable()
 {
@@ -70,7 +85,7 @@ function populateLayerHeader()
     layerHead.appendChild(tr2);
 }
 
-function populateLayerBody() 
+function populateLayerBody()
 {
     let layerBody = document.getElementById("layerbody");
     while (layerBody.firstChild) 
@@ -82,119 +97,7 @@ function populateLayerBody()
     // remove entries that do not match filter
     for (let layer of globalData.pcb_layers) 
     {
-        if (getFilterLayer() != "")
-        {
-            if(!entryMatchesLayer(layer))
-            {
-                continue;
-            }
-        }
-
-        var newlabelF = document.createElement("Label");
-        var newlabelR = document.createElement("Label");
-        
-        let tr = document.createElement("TR");
-        let td = document.createElement("TD");
-        let input_front = document.createElement("input");
-        let input_back = document.createElement("input");
-        
-        input_front.type = "checkbox";
-        input_back.type = "checkbox";
-        newlabelF.classList.add("check_box_bom")
-        newlabelR.classList.add("check_box_bom")
-
-
-
-
-        // Assumes that all layers are visible by default.
-        if (    (globalData.readStorage( "checkbox_layer_front_" + layer.name + "_visible" ) == "true")
-             || (globalData.readStorage( "checkbox_layer_front_" + layer.name + "_visible" ) == null)
-        )
-        {
-            pcb.SetLayerVisibility(layer.name, true, true);
-            input_front.checked = true;
-        }
-        else
-        {
-            pcb.SetLayerVisibility(layer.name, true, false);
-            input_front.checked = false;
-        }
-
-
-        if (    (globalData.readStorage( "checkbox_layer_back_" + layer.name + "_visible" ) == "true")
-             || (globalData.readStorage( "checkbox_layer_back_" + layer.name + "_visible" ) == null)
-        )
-        {
-            pcb.SetLayerVisibility(layer.name, false, true);
-            input_back.checked = true;
-        }
-        else
-        {
-            pcb.SetLayerVisibility(layer.name, false, false);
-            input_back.checked = false;
-        }
-
-        
-        input_front.onchange = createLayerCheckboxChangeHandler(layer, true);
-        input_back.onchange  = createLayerCheckboxChangeHandler(layer, false);
-
-        //newlabelF.innerHTML = input_front;
-        //newlabelR.innerHTML = input_back;
-        var spanF = document.createElement("Span");
-        var spanR = document.createElement("Span");
-        spanF.classList.add("checkmark")
-        spanR.classList.add("checkmark")
-
-        newlabelF.appendChild(input_front);
-        newlabelR.appendChild(input_back);
-        newlabelF.appendChild(spanF);
-        newlabelR.appendChild(spanR);
-
-        td.appendChild(newlabelF);
-        tr.appendChild(td);
-
-        td = document.createElement("TD");
-        td.appendChild(newlabelR);
-        tr.appendChild(td);
-
-        // Layer
-        td = document.createElement("TD");
-        td.innerHTML =highlightFilterLayer(layer.name);
-        tr.appendChild(td);
-
-        layerbody.appendChild(tr);
-    }
-}
-
-function createLayerCheckboxChangeHandler(layerEntry, isFront) {
-    return function() 
-    {
-        if(isFront)
-        {
-            if(layerEntry.visible_front)
-            {
-                pcb.SetLayerVisibility(layerEntry.name, isFront, false);
-                globalData.writeStorage("checkbox_layer_front_" + layerEntry.name + "_visible", "false");
-            }
-            else
-            {
-                pcb.SetLayerVisibility(layerEntry.name, isFront, true);
-                globalData.writeStorage("checkbox_layer_front_" + layerEntry.name + "_visible", "true");
-            }
-        }
-        else
-        {
-            if(layerEntry.visible_back)
-            {
-                pcb.SetLayerVisibility(layerEntry.name, isFront, false);
-                globalData.writeStorage("checkbox_layer_back_" + layerEntry.name + "_visible", "false");
-            }
-            else
-            {
-                pcb.SetLayerVisibility(layerEntry.name, isFront, true);
-                globalData.writeStorage("checkbox_layer_back_" + layerEntry.name + "_visible", "true");
-            }
-        }
+        layerbody.appendChild(new Table_LayerEntry(layer));
     }
 }
 
