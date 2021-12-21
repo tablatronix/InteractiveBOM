@@ -49,43 +49,9 @@ function DrawTraces(isViewFront, scalefactor)
 
 function DrawSilkscreen(isViewFront, scalefactor)
 {
-    let color = "#aa4";
-
-    for (let layer of pcbdata.board.layers)
+    for (let layer of globalData.layer_list)
     {
-        let ctx = pcb.GetLayerCanvas(layer.layerNumber, isViewFront).getContext("2d");
-
-       if(layer.layerNumber-1 < 16)
-        {
-            color = colorMap.GetTraceColor(layer.layerNumber-1);
-        }
-        else
-        {
-            color = "#aa4"
-        }
-        
-        for (let path of layer.paths)
-        {
-            if(path.type == "line")
-            {
-                let lineWidth = Math.max(1 / scalefactor, path.width);
-                render_silkscreen.Line(ctx, path, lineWidth, color);
-            }
-            else if(path.type == "arc")
-            {
-                let lineWidth = Math.max(1 / scalefactor, path.width);
-                render_silkscreen.Arc(ctx, path, lineWidth, color);
-            }
-            else if(path.type == "circle")
-            {
-                let lineWidth = Math.max(1 / scalefactor, path.width);
-                render_silkscreen.Circle(ctx, path, lineWidth, color);
-            }
-            else
-            {
-                console.log("unsupported silkscreen path segment type", path.type);
-            }
-        }
+        layer[1][0].Render(isViewFront, scalefactor);
     }
 }
 

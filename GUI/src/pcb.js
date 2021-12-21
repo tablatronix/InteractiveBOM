@@ -7,7 +7,6 @@
 "use strict";
 var Part     = require("./Part.js");
 var Metadata = require("./Metadata.js").Metadata;
-var PCB_Layer = require("./PCB/PCB_Layer.js").PCB_Layer;
 var globalData = require("./global.js");
 
 

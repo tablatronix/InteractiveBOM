@@ -1,16 +1,14 @@
 "use strict";
 
 
-var Point = require("../render/point.js").Point
+var Segment_Arc  = require("./Segment_Arc.js").Segment_Arc;
+var Segment_Line = require("./Segment_Line.js").Segment_Line;
 
-var Segment_Arc  = require("./Segment_Arc.js").Segment_Arc
-var Segment_Line = require("./Segment_Line.js").Segment_Line
+var Segment_Via_Round   = require("./Segment_Via_Round.js").Segment_Via_Round;
+var Segment_Via_Square  = require("./Segment_Via_Square.js").Segment_Via_Square;
+var Segment_Via_Octagon = require("./Segment_Via_Octagon.js").Segment_Via_Octagon;
 
-var Segment_Via_Round   = require("./Segment_Via_Round.js").Segment_Via_Round
-var Segment_Via_Square  = require("./Segment_Via_Square.js").Segment_Via_Square
-var Segment_Via_Octagon = require("./Segment_Via_Octagon.js").Segment_Via_Octagon
-
-var Segment_Polygon = require("./Segment_Polygon.js").Segment_Polygon
+var Segment_Polygon = require("./Segment_Polygon.js").Segment_Polygon;
 
 var pcb                = require("../pcb.js");
 
@@ -60,6 +58,7 @@ class PCB_Trace
         {
             let ctx = pcb.GetLayerCanvas(segment.layer, isViewFront).getContext("2d")
             segment.Render(ctx, scalefactor);
+            
         }
     }
 
