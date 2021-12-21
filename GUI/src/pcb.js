@@ -8,6 +8,8 @@
 var Part     = require("./Part.js");
 var Metadata = require("./Metadata.js").Metadata;
 var PCB_Layer = require("./PCB/PCB_Layer.js").PCB_Layer;
+var globalData = require("./global.js");
+
 
 /***************************************************************************************************
                                          PCB Part Interfaces
@@ -142,198 +144,18 @@ function getAttributeValue(part, attributeToLookup)
 /***************************************************************************************************
                                          PCB Layers Interfaces
 ***************************************************************************************************/
-let Layers = [];
-let layer_Zindex = 0;
 
-function GetLayers()
+function GetLayerCanvas(layerNumber, isFront)
 {
-    return Layers;
-}
 
-function PCBLayer(name)
-{
-    this.name          = name;
-    this.visible_front = true;
-    this.visible_back  = true;
-
-
-    this.front_id = "layer_front_" + name;
-    this.back_id  = "layer_rear_"  + name;
-
-    let canvas_front           = document.getElementById("front-canvas-list");
-    let layer_front            = document.createElement("canvas");
-    layer_front.id             = this.front_id;
-    layer_front.style.zIndex   = layer_Zindex;
-    layer_front.style.position = "absolute";
-    layer_front.style.left     = 0;
-    layer_front.style.top      = 0;
-    canvas_front.appendChild(layer_front);
-
-
-    let canvas_back = document.getElementById("back-canvas-list");
-    let layer_back = document.createElement("canvas");
-    layer_back.id = this.back_id;
-    layer_back.style.zIndex = layer_Zindex;
-    layer_back.style.position = "absolute";
-    layer_back.style.left = 0;
-    layer_back.style.top = 0;
-
-    canvas_back.appendChild(layer_back);
-
-    layer_Zindex = layer_Zindex + 1;
-}
-
-function SetLayerVisibility(layerName, isFront, visible)
-{
-    let layerIndex = Layers.findIndex(i => i.name === layerName);
-    if(isFront)
+    for(let layer of globalData.render_layers)
     {
-        // If item is not in the list 
-        if( layerIndex !== -1)
+        if(layer.layerName === layerNumber)
         {
-            // Layer exists. Check if visible
-            Layers[layerIndex].visible_front = visible;
-
-            // TODO: Refactor this. below is used to interface between the different layer 
-            // setups that are currently being used but once switched to the new layer format
-            // then the above will not be needed.
-            let canvas = undefined; 
-            if(visible)
-            {
-                canvas = document.getElementById(Layers[layerIndex].front_id);
-                canvas.style.display="";
-            }
-            else
-            {
-                canvas = document.getElementById(Layers[layerIndex].front_id);
-                canvas.style.display="none";
-            }
+            return layer.GetCanvas(isFront);
         }
     }
-    else
-    {
-        // If item is not in the list 
-        if( layerIndex !== -1)
-        {
-            // Layer exists. Check if visible
-            Layers[layerIndex].visible_back = visible;
-
-            // TODO: Refactor this. below is used to interface between the different layer 
-            // setups that are currently being used but once switched to the new layer format
-            // then the above will not be needed.
-            let canvas = undefined;
-            if(visible)
-            {
-                canvas= document.getElementById(Layers[layerIndex].back_id);
-                canvas.style.display="";
-            }
-            else
-            {
-                canvas= document.getElementById(Layers[layerIndex].back_id);
-                canvas.style.display="none";
-            }
-        }
-    }
-}
-
-function GetLayerCanvas(layerName, isFront)
-{
-    // Get the index of the PCB layer 
-    // MAp used here to create a list of just the layer names, which indexOf can then  be used against.
-    let index = Layers.map(function(e) { return e.name; }).indexOf(layerName);
-    // Requested layer does not exist. Create new layer
-    if(index === -1)
-    {
-        // Adds layer to layer stack
-        Layers.push(new PCBLayer(layerName));
-        index = Layers.length-1;
-    }
-
-    // Return the canvas instance
-    if(isFront)
-    {
-        return document.getElementById(Layers[index].front_id);
-    } 
-    else
-    {
-        return document.getElementById(Layers[index].back_id);
-    }
-}
-
-function CreateLayers(pcbdataStructure)
-{
-    // Extract layers from the trace section
-    for( let trace of pcbdataStructure.board.traces)
-    {
-        for(let segment of trace.segments)
-        {
-            // Check that segment contains a layer definition
-            if(segment.layer)
-            {
-                // If item is not in the list 
-                if(Layers.findIndex(i => i.name === segment.layer) === -1)
-                {
-                    Layers.push(new PCBLayer(segment.layer));
-                }
-            }
-        }
-    }
-
-    // Extract layers form the layers section
-    for(let layer of pcbdataStructure.board.layers)
-    {
-        // If item is not in the list 
-        if(Layers.findIndex(i => i.name === layer.name) === -1)
-        {
-            // Add the par to the global part array
-            Layers.push(new PCBLayer(layer.name));
-        }
-    }
-
-    // XXX: Need another way to extract all layers from input
-    //Layers.push(new PCBLayer("pads"));
-    //Layers.push(new PCBLayer("highlights"));
-}
-
-
-function IsLayerVisible(layerName, isFront)
-{
-    let result = true;
-    let layerIndex = Layers.findIndex(i => i.name === layerName);
-
-    // This means that the layer is always visible. 
-    if(layerName == "all")
-    {
-        result = true;
-    }
-    else if(isFront)
-    {
-        // If item is not in the list 
-        if( layerIndex === -1)
-        {
-            result = false;
-        }
-        else
-        {
-            // Layer exists. Check if visible
-            result = Layers[layerIndex].visible_front;
-        }
-    }
-    else
-    {
-        // If item is not in the list 
-        if( layerIndex === -1)
-        {
-            result = false;
-        }
-        else
-        {
-            // Layer exists. Check if visible
-            result = Layers[layerIndex].visible_back;
-        }
-    }
-
-    return result;
+    return null
 }
 
 function OpenPcbData(pcbdata)
@@ -343,10 +165,9 @@ function OpenPcbData(pcbdata)
     let metadata = Metadata.GetInstance();
     metadata.Set(pcbdata.metadata);
 
-    CreateLayers(pcbdata);
+    //CreateLayers(pcbdata);
 }
 
 module.exports = {
-    OpenPcbData, GetBOM, getAttributeValue, GetBOMCombinedValues, filterBOMTable,
-    GetLayers, IsLayerVisible, SetLayerVisibility, GetLayerCanvas
+    OpenPcbData, GetBOM, getAttributeValue, GetBOMCombinedValues, filterBOMTable, GetLayerCanvas
 };

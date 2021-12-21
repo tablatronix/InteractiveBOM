@@ -4,7 +4,7 @@
 
 let pcb_traces = [];
 let pcb_layers = [];
-
+let render_layers = [];
 /*************************************************
               Board Rotation                    
 *************************************************/
@@ -518,7 +518,7 @@ function GetBoardRotation()
 
 
 module.exports = {
-    pcb_traces, pcb_layers,
+    pcb_traces, pcb_layers, render_layers,
     initStorage                , readStorage                , writeStorage          ,
     setHighlightedRefs         , getHighlightedRefs         ,
     setRedrawOnDrag            , getRedrawOnDrag            ,

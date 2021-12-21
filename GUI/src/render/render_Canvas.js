@@ -1,7 +1,7 @@
 "use strict";
 var pcb        = require("../pcb.js");
 var globalData = require("../global.js");
-
+var Render_Layer = require("./Render_Layer.js").Render_Layer;
 
 function prepareCanvas(canvas, flip, transform) 
 {
@@ -88,8 +88,8 @@ function applyRotation(bbox)
 
 function ClearHighlights(canvasdict)
 {
-    let canvas = pcb.GetLayerCanvas("highlights", (canvasdict.layer === "F"));
-    ClearCanvas(canvas);
+    //let canvas = pcb.GetLayerCanvas("highlights", (canvasdict.layer === "F"));
+    //ClearCanvas(canvas);
 }
 
 function ClearCanvas(canvas) 
@@ -117,56 +117,27 @@ function prepareLayer(canvasdict, canvas)
 
 function RedrawCanvas(layerdict)
 {
-    let pcbLayers = pcb.GetLayers();
+    let isFront = (layerdict.layer === "F")
 
-    if(layerdict.layer === "F")
+    for (let layer of globalData.render_layers)
     {
-        let canvas = undefined;
-        for (let i = 0; i < pcbLayers.length; i++) 
-        {
-            canvas = document.getElementById(pcbLayers[i].front_id);
-            prepareLayer(layerdict, canvas);
-            ClearCanvas(canvas);
-        }
-    }
-    else
-    {
-        let canvas = undefined;
-        for (let i = 0; i < pcbLayers.length; i++) 
-        {
-            canvas = document.getElementById(pcbLayers[i].back_id);
-            prepareLayer(layerdict, canvas);
-            ClearCanvas(canvas);
-        }
+        let canvas = layer.GetCanvas(isFront)
+        prepareLayer(layerdict, canvas);
+        ClearCanvas(canvas);
     }
 }
 
 function ResizeCanvas(layerdict)
 {
     let flip = (layerdict.layer != "B");
-    let pcbLayers = pcb.GetLayers();
-    
-    if(layerdict.layer === "F")
+    let isFront = (layerdict.layer === "F")
+
+    for (let layer of globalData.render_layers)
     {
-        let canvas = undefined;
-        for (let i = 0; i < pcbLayers.length; i++) 
-        {
-            canvas = document.getElementById(pcbLayers[i].front_id);
-            recalcLayerScale(layerdict, canvas);
-            prepareCanvas(canvas, flip, layerdict.transform);
-            ClearCanvas(canvas);
-        }
-    }
-    else
-    {
-        let canvas = undefined;
-        for (let i = 0; i < pcbLayers.length; i++) 
-        {
-            canvas = document.getElementById(pcbLayers[i].back_id);
-            recalcLayerScale(layerdict, canvas);
-            prepareCanvas(canvas, flip, layerdict.transform);
-            ClearCanvas(canvas);
-        }
+        let canvas = layer.GetCanvas(isFront)
+        recalcLayerScale(layerdict, canvas);
+        prepareCanvas(canvas, flip, layerdict.transform);
+        ClearCanvas(canvas);
     }
 }
 

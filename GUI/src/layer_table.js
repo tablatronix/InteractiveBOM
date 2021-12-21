@@ -92,7 +92,6 @@ function populateLayerBody()
     {
         layerBody.removeChild(layerBody.firstChild);
     }
-    let layertable =  pcb.GetLayers();
 
     // remove entries that do not match filter
     for (let layer of globalData.pcb_layers) 

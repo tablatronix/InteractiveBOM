@@ -11,6 +11,9 @@ var bomTable          = require("./bom_table.js")
 var Metadata = require("./Metadata.js").Metadata;
 
 var PCB_Trace = require("./PCB/PCB_Trace.js").PCB_Trace;
+var PCB_Layer = require("./PCB/PCB_Layer.js").PCB_Layer;
+
+var Render_Layer = require("./render/Render_Layer.js").Render_Layer;
 
 //TODO: GLOBAL VARIABLES
 let layerBody = undefined;
@@ -19,8 +22,6 @@ let bomhead   = undefined;
 let topmostdiv = undefined;
 let bom = undefined;
 let bomtable = undefined;
-
-
 
 
 function setDarkMode(value)
@@ -37,10 +38,6 @@ function setDarkMode(value)
     render.drawCanvas(globalData.GetAllCanvas().front);
     render.drawCanvas(globalData.GetAllCanvas().back);
 }
-
-
-
-
 
 function entryMatches(part)
 {
@@ -150,10 +147,6 @@ function highlightNextRow()
     }
     smoothScrollToRow(globalData.getCurrentHighlightedRowId());
 }
-
-
-
-
 
 function modulesClicked(references)
 {
@@ -576,7 +569,6 @@ window.onload = function(e)
     // This function makes so that the user data for the pcb is converted to our internal structure
     pcb.OpenPcbData(pcbdata)
 
-
     for(let trace of pcbdata.board.traces)
     {
         globalData.pcb_traces.push(new PCB_Trace(trace))
@@ -584,10 +576,21 @@ window.onload = function(e)
 
     for(let layer of pcbdata.board.layers)
     {
-        globalData.pcb_layers.push(layer);
+        globalData.pcb_layers.push(new PCB_Layer(layer));
+
+        globalData.render_layers.push(new Render_Layer(layer));
     }
 
-    console.log(globalData.pcb_layers);
+    /* 
+        Create index to canvas lookup
+        
+        A common task is to get the canvas used by each layer, the following 
+        maps the layer index value to the document id. This helps reduce the DOM access
+        that are needed.
+    */
+    
+
+
 
     // Create canvas layers. One canvas per pcb layer
 

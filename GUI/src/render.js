@@ -4,7 +4,6 @@
 
 var globalData         = require("./global.js");
 var render_pads        = require("./render/render_pad.js");
-var render_boardedge   = require("./render/render_boardedge.js");
 var render_silkscreen  = require("./render/render_silkscreen.js");
 var render_canvas      = require("./render/render_Canvas.js");
 var render_boundingbox = require("./render/render_boundingbox.js");

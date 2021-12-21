@@ -10,7 +10,6 @@ class BoundingBox
         this.pointA = a;
         this.pointB = b;
     }
-
 }
 
 module.exports = {
