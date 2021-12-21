@@ -16,12 +16,12 @@ var PCB_Layer = require("./PCB/PCB_Layer.js").PCB_Layer;
 var Render_Layer = require("./render/Render_Layer.js").Render_Layer;
 
 //TODO: GLOBAL VARIABLES
-let layerBody = undefined;
-let layerHead = undefined;
-let bomhead   = undefined;
+let layerBody  = undefined;
+let layerHead  = undefined;
+let bomhead    = undefined;
 let topmostdiv = undefined;
-let bom = undefined;
-let bomtable = undefined;
+let bom        = undefined;
+let bomtable   = undefined;
 
 
 function setDarkMode(value)
@@ -576,21 +576,8 @@ window.onload = function(e)
 
     for(let layer of pcbdata.board.layers)
     {
-        globalData.pcb_layers.push(new PCB_Layer(layer));
-
-        globalData.render_layers.push(new Render_Layer(layer));
+        globalData.layer_list.set(layer.layerNumber, [new PCB_Layer(layer), new Render_Layer(layer)])
     }
-
-    /* 
-        Create index to canvas lookup
-        
-        A common task is to get the canvas used by each layer, the following 
-        maps the layer index value to the document id. This helps reduce the DOM access
-        that are needed.
-    */
-    
-
-
 
     // Create canvas layers. One canvas per pcb layer
 

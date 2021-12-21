@@ -7,7 +7,6 @@ var render_pads        = require("./render/render_pad.js");
 var render_silkscreen  = require("./render/render_silkscreen.js");
 var render_canvas      = require("./render/render_Canvas.js");
 var render_boundingbox = require("./render/render_boundingbox.js");
-var Point              = require("./render/point.js").Point;
 var pcb                = require("./pcb.js");
 var colorMap           = require("./colormap.js");
 
@@ -54,7 +53,7 @@ function DrawSilkscreen(isViewFront, scalefactor)
 
     for (let layer of pcbdata.board.layers)
     {
-        let ctx = pcb.GetLayerCanvas(layer.name, isViewFront).getContext("2d");
+        let ctx = pcb.GetLayerCanvas(layer.layerNumber, isViewFront).getContext("2d");
 
        if(layer.layerNumber-1 < 16)
         {

@@ -88,8 +88,8 @@ function applyRotation(bbox)
 
 function ClearHighlights(canvasdict)
 {
-    //let canvas = pcb.GetLayerCanvas("highlights", (canvasdict.layer === "F"));
-    //ClearCanvas(canvas);
+    let canvas = pcb.GetLayerCanvas("highlights", (canvasdict.layer === "F"));
+    ClearCanvas(canvas);
 }
 
 function ClearCanvas(canvas) 
@@ -119,9 +119,9 @@ function RedrawCanvas(layerdict)
 {
     let isFront = (layerdict.layer === "F")
 
-    for (let layer of globalData.render_layers)
+    for (let layer of globalData.layer_list)
     {
-        let canvas = layer.GetCanvas(isFront)
+        let canvas = layer[1][globalData.render_layers].GetCanvas(isFront)
         prepareLayer(layerdict, canvas);
         ClearCanvas(canvas);
     }
@@ -132,9 +132,9 @@ function ResizeCanvas(layerdict)
     let flip = (layerdict.layer != "B");
     let isFront = (layerdict.layer === "F")
 
-    for (let layer of globalData.render_layers)
+    for (let layer of globalData.layer_list)
     {
-        let canvas = layer.GetCanvas(isFront)
+        let canvas = layer[1][globalData.render_layers].GetCanvas(isFront)
         recalcLayerScale(layerdict, canvas);
         prepareCanvas(canvas, flip, layerdict.transform);
         ClearCanvas(canvas);
@@ -145,5 +145,3 @@ function ResizeCanvas(layerdict)
 module.exports = {
     ResizeCanvas, RedrawCanvas, rotateVector, ClearHighlights
 };
-
-

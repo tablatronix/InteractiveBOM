@@ -94,9 +94,9 @@ function populateLayerBody()
     }
 
     // remove entries that do not match filter
-    for (let layer of globalData.pcb_layers) 
+    for (let layer of globalData.layer_list)
     {
-        layerbody.appendChild(new Table_LayerEntry(layer));
+        layerbody.appendChild(new Table_LayerEntry(layer[1][globalData.pcb_layers]));
     }
 }
 

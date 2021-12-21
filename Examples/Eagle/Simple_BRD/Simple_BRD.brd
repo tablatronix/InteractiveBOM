@@ -168,7 +168,7 @@
 <text x="55.245" y="26.035" size="1.016" layer="3" font="vector" ratio="15" align="center">3</text>
 <text x="53.975" y="24.765" size="1.016" layer="4" font="vector" ratio="15" align="center">4</text>
 <text x="52.705" y="26.035" size="1.016" layer="5" font="vector" ratio="15" align="center">5</text>
-<text x="51.435" y="24.765" size="1.016" layer="8" font="vector" ratio="15" align="center">6</text>
+<text x="51.435" y="24.765" size="1.016" layer="6" font="vector" ratio="15" align="center">6</text>
 <text x="50.165" y="26.035" size="1.016" layer="7" font="vector" ratio="15" align="center">7</text>
 <text x="48.895" y="24.765" size="1.016" layer="8" font="vector" ratio="15" align="center">8</text>
 <text x="47.625" y="26.035" size="1.016" layer="9" font="vector" ratio="15" align="center">9</text>

@@ -2,7 +2,7 @@
 
 var globalData = require("../global.js");
 
-function createLayerCheckboxChangeHandler(layerName, isFront)
+function createLayerCheckboxChangeHandler(layer, isFront)
 {
     return function()
     {
@@ -11,28 +11,28 @@ function createLayerCheckboxChangeHandler(layerName, isFront)
         */
         if(isFront)
         {
-            if(globalData.readStorage( "checkbox_layer_front_" + layerName + "_visible" ) == "true")
+            if(globalData.readStorage( "checkbox_layer_front_" + layer.name + "_visible" ) == "true")
             {
-                //pcb.SetLayerVisibility(layerEntry.name, isFront, false);
-                globalData.writeStorage("checkbox_layer_front_" + layerName + "_visible", "false");
+                globalData.layer_list.get(layer.layerNumber)[globalData.render_layers].SetVisibility(isFront,false);
+                globalData.writeStorage("checkbox_layer_front_" + layer.name + "_visible", "false");
             }
             else
             {
-                //pcb.SetLayerVisibility(layerEntry.name, isFront, true);
-                globalData.writeStorage("checkbox_layer_front_" + layerName + "_visible", "true");
+                globalData.layer_list.get(layer.layerNumber)[globalData.render_layers].SetVisibility(isFront,true);
+                globalData.writeStorage("checkbox_layer_front_" + layer.name + "_visible", "true");
             }
         }
         else
         {
-            if(globalData.readStorage( "checkbox_layer_back_" + layerName + "_visible" ) == "true")
+            if(globalData.readStorage( "checkbox_layer_back_" + layer.name + "_visible" ) == "true")
             {
-                //pcb.SetLayerVisibility(layerEntry.name, isFront, false);
-                globalData.writeStorage("checkbox_layer_back_" + layerName + "_visible", "false");
+                globalData.layer_list.get(layer.layerNumber)[globalData.render_layers].SetVisibility(isFront,false);
+                globalData.writeStorage("checkbox_layer_back_" + layer.name + "_visible", "false");
             }
             else
             {
-                //pcb.SetLayerVisibility(layerEntry.name, isFront, true);
-                globalData.writeStorage("checkbox_layer_back_" + layerName + "_visible", "true");
+                globalData.layer_list.get(layer.layerNumber)[globalData.render_layers].SetVisibility(isFront,true);
+                globalData.writeStorage("checkbox_layer_back_" + layer.name + "_visible", "true");
             }
         }
     }
@@ -73,8 +73,8 @@ class Table_LayerEntry
 
 
         let tr = document.createElement("TR");
-        tr.appendChild(this.CreateCheckbox_Visible(layer.name, true));
-        tr.appendChild(this.CreateCheckbox_Visible(layer.name, false));
+        tr.appendChild(this.CreateCheckbox_Visible(layer, true));
+        tr.appendChild(this.CreateCheckbox_Visible(layer, false));
 
         // Layer
         let td = document.createElement("TD");
@@ -90,7 +90,7 @@ class Table_LayerEntry
         and when unselected (not visible) an eye icon will 
         slash will be used.
     */
-    CreateCheckbox_Visible(layerName, isFront)
+    CreateCheckbox_Visible(layer, isFront)
     {
         let newlabel = document.createElement("Label");
         let td       = document.createElement("TD");
@@ -108,7 +108,7 @@ class Table_LayerEntry
             input.checked = this.visible_back;
         }
 
-        input.onchange = createLayerCheckboxChangeHandler(layerName, isFront);
+        input.onchange = createLayerCheckboxChangeHandler(layer, isFront);
 
         var span = document.createElement("Span");
         span.classList.add("checkmark")

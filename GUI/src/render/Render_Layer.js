@@ -11,10 +11,6 @@ class Render_Layer
         this.front_id      = "layer_front_" + iPCB_JSON_Layer.name;
         this.back_id       = "layer_rear_"  + iPCB_JSON_Layer.name;
 
-        // TODO: Remove the following. This data is is the model
-        this.layerName = iPCB_JSON_Layer.name;
-
-
         let canvas_front = document.getElementById("front-canvas-list");
         let layer_front   = document.createElement("canvas");
         layer_front.id             = this.front_id;
@@ -38,12 +34,12 @@ class Render_Layer
         this.canvas_back  = document.getElementById(this.back_id);
     }
 
-    SetVisability(isFront, visability)
+    SetVisibility(isFront, visibility)
     {
         if(isFront)
         {
-            this.visible_front = visability;
-            if(visible)
+            this.visible_front = visibility;
+            if(visibility)
             {
                 this.canvas_front.style.display="";
             }
@@ -54,8 +50,8 @@ class Render_Layer
         }
         else
         {
-            this.visible_back  = visability;
-            if(visible)
+            this.visible_back  = visibility;
+            if(visibility)
             {
                 this.canvas_back.style.display="";
             }
