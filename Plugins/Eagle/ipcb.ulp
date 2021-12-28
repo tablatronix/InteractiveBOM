@@ -644,7 +644,7 @@ void GenerateMetadata( void )
             Print the metadata information to file. 
         */
         printf("\"metadata\":{");
-        printf("\"protocol_version\":%d,", 1);
+        printf("\"protocol_version\":%d.%d,", 2,1);
         printf("\"ecad\":\"%s\","        , "Eagle");
         printf("\"company\":\"%s\","     , company);
         printf("\"project_name\":\"%s\",", GetProjectName(B.name));

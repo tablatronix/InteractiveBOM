@@ -11,7 +11,7 @@ Generated JSON is validated using [JSON Formatter & Validator](https://jsonforma
     /*************** METADATA SECTION ***************/
     <METADATA>         ::= "\"metadata\":" "{" <PROTOCOL_VERSION> "," <ECAD> "," <COMPANY_NAME> "," <PROJECT_NAME> "," <PROJECT_REVISION> "," <DATE> "," <NUMBER_PARTS> "}"
 
-    <PROTOCOL_VERSION> ::= "\"protocol_version\":" <UNSIGNED_INTEGER>
+    <PROTOCOL_VERSION> ::= "\"protocol_version\":" <POSITIVE_REAL_NUMBER>
 
     <COMPANY_NAME>     ::= "\"revision\"" ":" "\"" <STRING> "\""
     <PROJECT_REVISION> ::= "\"company\""  ":" "\"" <STRING> "\""
