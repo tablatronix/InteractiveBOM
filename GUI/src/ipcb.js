@@ -19,13 +19,14 @@ var Render_Layer = require("./render/Render_Layer.js").Render_Layer;
 let layerBody  = undefined;
 let layerHead  = undefined;
 let bomhead    = undefined;
-let topmostdiv = undefined;
+
 let bom        = undefined;
 let bomtable   = undefined;
 
 
 function setDarkMode(value)
 {
+    let topmostdiv = document.getElementById("topmostdiv");
     if (value)
     {
         topmostdiv.classList.add("dark");
